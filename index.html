@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no">
+  <title>Allphone Snake</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      overflow: hidden;
+      color: white;
+    }
+    #gameContainer {
+      position: relative;
+      width: 90vw;
+      max-width: 360px;
+      height: calc(90vw * 16 / 9);
+      max-height: 640px;
+      background: #222;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: linear-gradient(#1e1e1e, #2a2a2a);
+    }
+    .controls {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      user-select: none;
+    }
+    #levelSelect {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+      z-index: 2;
+    }
+    #levelSelect button {
+      padding: 6px 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      cursor: pointer;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 14px;
+    }
+    .flag {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      background: url('icons/icon-192x192.png') no-repeat center/contain;
+      opacity: 0.6;
+    }
+    .flag.left { left: 6px; }
+    .flag.right { right: 6px; }
+  </style>
+</head>
+<body>
+<div id="gameContainer">
+  <div class="flag left"></div>
+  <canvas id="canvas" width="360" height="640"></canvas>
+  <div class="flag right"></div>
+  <div id="levelSelect">
+    <button data-speed="200">קל</button>
+    <button data-speed="120">בינוני</button>
+    <button data-speed="70">קשה</button>
+  </div>
+  <div id="score">אורך: 1</div>
+  <div class="controls">
+    <div class="btn" id="leftBtn">◀</div>
+    <div class="btn" id="upBtn">▲</div>
+    <div class="btn" id="downBtn">▼</div>
+    <div class="btn" id="rightBtn">▶</div>
+  </div>
+</div>
+<script>
+(function() {
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const boxSize = 20;
+  const cols = canvas.width / boxSize;
+  const rows = canvas.height / boxSize;
+  let snake = [{x: Math.floor(cols/2), y: Math.floor(rows/2)}];
+  let direction = 'right';
+  let food = null;
+  let gameInterval;
+  let speed = 150;
+  const scoreEl = document.getElementById('score');
+
+  function spawnFood() {
+    let x, y;
+    do {
+      x = Math.floor(Math.random() * cols);
+      y = Math.floor(Math.random() * rows);
+    } while (snake.some(seg => seg.x === x && seg.y === y));
+    food = {x, y};
+  }
+
+  function draw() {
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+    // Draw food
+    if (food) {
+      ctx.fillStyle = '#4caf50';
+      ctx.fillRect(food.x*boxSize, food.y*boxSize, boxSize, boxSize);
+    }
+    // Draw snake segments
+    snake.forEach((seg) => {
+      const grad = ctx.createLinearGradient(0, seg.y*boxSize, 0, seg.y*boxSize + boxSize);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(1, '#cccccc');
+      ctx.fillStyle = grad;
+      ctx.strokeStyle = '#888';
+      ctx.lineWidth = 2;
+      ctx.fillRect(seg.x*boxSize, seg.y*boxSize, boxSize, boxSize);
+      ctx.strokeRect(seg.x*boxSize, seg.y*boxSize, boxSize, boxSize);
+    });
+    scoreEl.textContent = 'אורך: ' + snake.length;
+  }
+
+  function update() {
+    const head = { ...snake[0] };
+    if (direction === 'left') head.x--;
+    else if (direction === 'right') head.x++;
+    else if (direction === 'up') head.y--;
+    else if (direction === 'down') head.y++;
+
+    // Wrap around edges
+    if (head.x < 0) head.x = cols - 1;
+    if (head.x >= cols) head.x = 0;
+    if (head.y < 0) head.y = rows - 1;
+    if (head.y >= rows) head.y = 0;
+
+    // Self collision
+    if (snake.some((seg, index) => index > 0 && seg.x === head.x && seg.y === head.y)) {
+      resetGame();
+      return;
+    }
+
+    snake.unshift(head);
+    // Eat food
+    if (food && head.x === food.x && head.y === food.y) {
+      spawnFood();
+    } else {
+      snake.pop();
+    }
+    draw();
+  }
+
+  function startGame() {
+    snake = [{x: Math.floor(cols/2), y: Math.floor(rows/2)}];
+    direction = 'right';
+    spawnFood();
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(update, speed);
+  }
+
+  function resetGame() {
+    clearInterval(gameInterval);
+    alert('נגמר המשחק! אורך הסנייק היה ' + snake.length);
+    startGame();
+  }
+
+  // Controls
+  document.getElementById('leftBtn').addEventListener('click', () => { if (direction !== 'right') direction='left'; });
+  document.getElementById('rightBtn').addEventListener('click', () => { if (direction !== 'left') direction='right'; });
+  document.getElementById('upBtn').addEventListener('click', () => { if (direction !== 'down') direction='up'; });
+  document.getElementById('downBtn').addEventListener('click', () => { if (direction !== 'up') direction='down'; });
+
+  // Swipe support
+  let touchStartX = null;
+  let touchStartY = null;
+  canvas.addEventListener('touchstart', e => {
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  });
+  canvas.addEventListener('touchmove', e => {
+    if (!touchStartX || !touchStartY) return;
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 30 && direction !== 'left') direction = 'right';
+      else if (dx < -30 && direction !== 'right') direction = 'left';
+    } else {
+      if (dy > 30 && direction !== 'up') direction = 'down';
+      else if (dy < -30 && direction !== 'down') direction = 'up';
+    }
+    touchStartX = null;
+    touchStartY = null;
+  });
+
+  // Keyboard support
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft' && direction !== 'right') direction='left';
+    if (e.key === 'ArrowRight' && direction !== 'left') direction='right';
+    if (e.key === 'ArrowUp' && direction !== 'down') direction='up';
+    if (e.key === 'ArrowDown' && direction !== 'up') direction='down';
+  });
+
+  // Level select
+  document.querySelectorAll('#levelSelect button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      speed = parseInt(btn.dataset.speed);
+      startGame();
+    });
+  });
+
+  // Start with medium level automatically
+  window.addEventListener('load', () => {
+    speed = 120;
+    startGame();
+  });
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
+})();
+</script>
+</body>
+</html>
