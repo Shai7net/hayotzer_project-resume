@@ -17,7 +17,8 @@
     <meta property="og:type" content="website" />
     <meta property="og:image" content="assets/shot-3/links-gallery.webp" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preload" href="assets/shot-1-frames/frame_0001.webp" as="image" fetchpriority="high" />
+    <link rel="icon" href="assets/loader/hayotzer-loader-portal.png" type="image/png" />
+    <link rel="preload" href="assets/loader/hayotzer-loader-portal.png" as="image" fetchpriority="high" />
     <link rel="preload" href="assets/shot-4-5/shot-4-5-continuity-20260524.jpg" as="image" />
     <title>Hayotzer | Opening The Book</title>
     <style>
@@ -76,6 +77,9 @@
         --break-world-opacity: 1;
         --break-world-blur: 0px;
         --break-flash: 0;
+        --boot-progress: 0;
+        --boot-hue: 190;
+        --links-fragment-image: url("assets/shot-3/links-gallery.webp");
       }
 
       * {
@@ -104,6 +108,20 @@
           system-ui,
           Arial,
           sans-serif;
+      }
+
+      body[data-boot-state="loading"],
+      body[data-boot-state="error"] {
+        height: 100svh;
+        overflow: hidden;
+        touch-action: none;
+      }
+
+      body[data-boot-state="loading"] .stage,
+      body[data-boot-state="error"] .stage {
+        opacity: 0;
+        pointer-events: none;
+        filter: blur(18px) saturate(0.72);
       }
 
       body[data-scene-kind="count"] .intro-copy {
@@ -919,11 +937,7 @@
         top: var(--frag-top, 0%);
         width: 25.12%;
         height: 33.48%;
-        background-image: url("assets/shot-3/links-gallery.png");
-        background-image: image-set(
-          url("assets/shot-3/links-gallery.webp") type("image/webp"),
-          url("assets/shot-3/links-gallery.png") type("image/png")
-        );
+        background-image: var(--links-fragment-image);
         background-size: 400% 300%;
         background-position: var(--bg-x, 0%) var(--bg-y, 0%);
         opacity: var(--piece-opacity, 0);
@@ -1728,28 +1742,223 @@
 
       .loader {
         position: fixed;
-        z-index: 20;
-        inset-inline: 0;
-        bottom: 1rem;
-        display: flex;
-        justify-content: center;
-        pointer-events: none;
+        z-index: 40;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: clamp(1.2rem, 4vw, 3rem);
+        overflow: hidden;
+        pointer-events: auto;
         opacity: 1;
-        transition: opacity 350ms ease;
+        background:
+          radial-gradient(circle at 50% 42%, hsl(var(--boot-hue) 100% 68% / 0.2), transparent 18rem),
+          radial-gradient(circle at 18% 22%, rgba(103, 248, 255, 0.16), transparent 24rem),
+          radial-gradient(circle at 82% 18%, rgba(255, 91, 187, 0.18), transparent 24rem),
+          linear-gradient(135deg, #03030a 0%, #0b0718 42%, #041426 100%);
+        transition:
+          opacity 650ms ease,
+          visibility 650ms ease;
       }
 
       .loader.is-hidden {
         opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
       }
 
-      .loader span {
-        padding: 0.58rem 0.9rem;
-        border: 1px solid rgba(255, 255, 255, 0.18);
+      .loader::before,
+      .loader::after {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        pointer-events: none;
+      }
+
+      .loader::before {
+        background:
+          repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.028) 0 1px, transparent 1px 18px),
+          radial-gradient(circle at 50% 50%, transparent 0 9rem, rgba(247, 200, 115, 0.07) 9.2rem 9.35rem, transparent 9.6rem);
+        transform: rotate(calc(var(--boot-progress) * 90deg));
+        animation: bootFieldSpin 18s linear infinite;
+      }
+
+      .loader::after {
+        background:
+          radial-gradient(circle, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.5px) 0 0 / 6rem 6rem,
+          radial-gradient(circle, rgba(103, 248, 255, 0.32) 0 1px, transparent 1.5px) 2rem 3rem / 8rem 8rem;
+        opacity: 0.24;
+        transform: translate3d(calc(var(--boot-progress) * -2rem), calc(var(--boot-progress) * 1rem), 0);
+      }
+
+      .loader__shell {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(13rem, 24rem) minmax(18rem, 32rem);
+        gap: clamp(1.4rem, 4vw, 4rem);
+        align-items: center;
+        width: min(92vw, 70rem);
+      }
+
+      .loader__portal {
+        position: relative;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        perspective: 900px;
+        filter:
+          drop-shadow(0 0 1.2rem rgba(103, 248, 255, 0.34))
+          drop-shadow(0 0 2.8rem rgba(255, 91, 187, 0.24));
+      }
+
+      .loader__portal img {
+        width: min(100%, 24rem);
+        height: auto;
+        object-fit: contain;
+        transform:
+          rotateZ(calc(var(--boot-progress) * 28deg))
+          rotateY(calc((var(--boot-progress) - 0.5) * 16deg));
+        animation: bootPortalFloat 4.8s ease-in-out infinite;
+      }
+
+      .loader__ring {
+        position: absolute;
+        inset: 10%;
+        border-radius: 50%;
+        border: 1px solid hsl(var(--boot-hue) 100% 72% / 0.42);
+        box-shadow:
+          inset 0 0 1.8rem hsl(var(--boot-hue) 100% 62% / 0.2),
+          0 0 2.2rem hsl(var(--boot-hue) 100% 62% / 0.34);
+        transform: rotateX(64deg) rotateZ(calc(var(--boot-progress) * 360deg));
+      }
+
+      .loader__ring:nth-child(3) {
+        inset: 18%;
+        border-color: rgba(247, 200, 115, 0.48);
+        transform: rotateX(78deg) rotateY(22deg) rotateZ(calc(var(--boot-progress) * -420deg));
+      }
+
+      .loader__copy {
+        display: grid;
+        gap: 0.8rem;
+      }
+
+      .loader__eyebrow,
+      .loader__mode,
+      .loader__file,
+      .loader__percent {
+        color: var(--gold);
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .loader__title {
+        max-width: 11ch;
+        color: #fff4c8;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.8rem, 8vw, 6.8rem);
+        font-weight: 900;
+        line-height: 0.82;
+        text-transform: uppercase;
+        text-shadow:
+          0 0.06em 0 #5b310b,
+          0 0.12em 0 #13070a,
+          0 0 1.3rem rgba(247, 200, 115, 0.35),
+          0 0 2.6rem rgba(103, 248, 255, 0.18);
+      }
+
+      .loader__text {
+        max-width: 34rem;
+        min-height: 2.2em;
+        color: rgba(248, 242, 255, 0.82);
+        font-size: clamp(1rem, 2.4vw, 1.25rem);
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .loader__meter {
+        position: relative;
+        height: 0.55rem;
+        margin-top: 0.6rem;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.16);
         border-radius: 999px;
-        background: rgba(7, 7, 17, 0.62);
-        color: rgba(248, 242, 255, 0.78);
-        font-size: 0.86rem;
-        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow:
+          inset 0 0 1rem rgba(0, 0, 0, 0.72),
+          0 0 1.6rem rgba(103, 248, 255, 0.14);
+      }
+
+      .loader__meter span {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: calc(var(--boot-progress) * 100%);
+        border-radius: inherit;
+        background:
+          linear-gradient(90deg, var(--cyan), var(--gold), var(--rose));
+        box-shadow:
+          0 0 0.9rem hsl(var(--boot-hue) 100% 68% / 0.75),
+          0 0 2rem rgba(255, 91, 187, 0.38);
+        transition: width 180ms ease;
+      }
+
+      .loader__status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem 1rem;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .loader__file {
+        max-width: 28rem;
+        overflow: hidden;
+        color: rgba(248, 242, 255, 0.58);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .loader__retry {
+        width: fit-content;
+        margin-top: 0.5rem;
+        padding: 0.78rem 1.05rem;
+        border: 1px solid rgba(247, 200, 115, 0.52);
+        border-radius: 999px;
+        background: rgba(7, 7, 17, 0.72);
+        color: var(--gold);
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .loader__retry[hidden] {
+        display: none;
+      }
+
+      @keyframes bootPortalFloat {
+        0%, 100% {
+          transform:
+            translate3d(0, -0.45rem, 0)
+            rotateZ(calc(var(--boot-progress) * 28deg))
+            rotateY(calc((var(--boot-progress) - 0.5) * 16deg));
+        }
+
+        50% {
+          transform:
+            translate3d(0, 0.45rem, 0)
+            rotateZ(calc(var(--boot-progress) * 28deg + 4deg))
+            rotateY(calc((var(--boot-progress) - 0.5) * 16deg));
+        }
+      }
+
+      @keyframes bootFieldSpin {
+        to {
+          transform: rotate(calc(var(--boot-progress) * 90deg + 360deg));
+        }
       }
 
       @media (max-width: 820px) {
@@ -1799,6 +2008,27 @@
 
         .contact-copy {
           text-align: right;
+        }
+
+        .loader__shell {
+          grid-template-columns: 1fr;
+          gap: 0.8rem;
+          width: min(92vw, 31rem);
+          text-align: left;
+        }
+
+        .loader__portal {
+          width: min(68vw, 17rem);
+          margin: 0 auto;
+        }
+
+        .loader__title {
+          max-width: 9ch;
+          font-size: clamp(2.3rem, 13vw, 4.4rem);
+        }
+
+        .loader__text {
+          font-size: 0.95rem;
         }
       }
 
@@ -2086,7 +2316,7 @@
       }
     </style>
   </head>
-  <body>
+  <body data-boot-state="loading">
     <main class="stage" aria-label="Opening scene for Hayotzer">
       <canvas id="bookCanvas" width="1280" height="720" aria-hidden="true"></canvas>
 
@@ -2223,7 +2453,27 @@
       </section>
     </main>
 
-    <div id="loader" class="loader" role="status" aria-live="polite"><span id="loaderText">Loading the book frames...</span></div>
+    <div id="loader" class="loader" role="status" aria-live="polite" aria-label="Loading Hayotzer">
+      <div class="loader__shell">
+        <div class="loader__portal" aria-hidden="true">
+          <img src="assets/loader/hayotzer-loader-portal.png" alt="" draggable="false" decoding="async" />
+          <i class="loader__ring"></i>
+          <i class="loader__ring"></i>
+        </div>
+        <div class="loader__copy">
+          <div id="loaderMode" class="loader__mode">Measuring device memory</div>
+          <div class="loader__eyebrow">Opening the book</div>
+          <strong class="loader__title">Hayotzer is assembling the world</strong>
+          <div id="loaderText" class="loader__text">Preparing the first spell...</div>
+          <div class="loader__meter" aria-hidden="true"><span id="loaderBar"></span></div>
+          <div class="loader__status">
+            <span id="loaderPercent" class="loader__percent">0%</span>
+            <span id="loaderFile" class="loader__file">boot manifest</span>
+          </div>
+          <button id="loaderRetry" class="loader__retry" type="button" hidden>Retry loading</button>
+        </div>
+      </div>
+    </div>
 
     <div id="videoModal" class="video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Video viewer">
       <div class="video-modal__panel">
@@ -2331,6 +2581,11 @@
         const skipToGameButton = document.getElementById("skipToGameButton");
         const loader = document.getElementById("loader");
         const loaderText = document.getElementById("loaderText");
+        const loaderBar = document.getElementById("loaderBar");
+        const loaderPercent = document.getElementById("loaderPercent");
+        const loaderFile = document.getElementById("loaderFile");
+        const loaderMode = document.getElementById("loaderMode");
+        const loaderRetry = document.getElementById("loaderRetry");
         const frames = new Array(FRAME_COUNT);
 
         video.muted = true;
@@ -2339,10 +2594,51 @@
         const lowMemory = Number(navigator.deviceMemory || 8) <= 4;
         const constrainedDevice = isIphone || lowMemory || window.innerWidth <= 480;
         const frameCacheRadius = constrainedDevice ? 8 : FRAME_COUNT;
+        const deviceProfile = (() => {
+          const memory = Number(navigator.deviceMemory || 0);
+          const cores = Number(navigator.hardwareConcurrency || 0);
+          const heapLimit = Number(performance.memory?.jsHeapSizeLimit || 0);
+          const heapLimitMb = heapLimit > 0 ? heapLimit / 1024 / 1024 : 0;
+          const physicalPixels = window.innerWidth * window.innerHeight * Math.max(1, window.devicePixelRatio || 1);
+          const oldIphoneShape = isIphone && Math.min(window.screen.width || window.innerWidth, window.screen.height || window.innerHeight) <= 414;
+
+          if (oldIphoneShape || constrainedDevice || (memory > 0 && memory <= 4) || (heapLimitMb > 0 && heapLimitMb < 900) || (cores > 0 && cores <= 4)) {
+            return {
+              mode: "constrained",
+              concurrency: 2,
+              decodeFrame: (index) => index < 10 || index === FRAME_COUNT - 1 || index % 12 === 0,
+              label: "Constrained device mode"
+            };
+          }
+
+          if ((memory >= 8 || heapLimitMb >= 1800) && cores >= 8 && physicalPixels >= 1400000) {
+            return {
+              mode: "aggressive",
+              concurrency: 6,
+              decodeFrame: () => true,
+              label: "Aggressive full preload"
+            };
+          }
+
+          return {
+            mode: "balanced",
+            concurrency: 4,
+            decodeFrame: (index) => index < 24 || index === FRAME_COUNT - 1 || index % 6 === 0,
+            label: "Balanced full preload"
+          };
+        })();
 
         document.body.dataset.device = constrainedDevice ? "constrained" : "full";
 
         let loadedCount = 0;
+        let bootReady = false;
+        let bootProgress = 0;
+        let bootStarted = false;
+        let bootCompletedAssets = 0;
+        let bootAssetTotal = 0;
+        let bootErrors = [];
+        const bootAssetMap = new Map();
+        const bootActiveFractions = new Map();
         let currentFrameIndex = -1;
         let pendingFrameIndex = 0;
         let latestProgress = 0;
@@ -2435,10 +2731,317 @@
         const framePath = (index) => `${FRAME_BASE}frame_${String(index + 1).padStart(4, "0")}.webp`;
         const setCss = (name, value) => root.style.setProperty(name, value);
         const getMaxScroll = () => Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const hideLoader = () => loader.classList.add("is-hidden");
-        const showLoadError = () => {
+        const normalizeAssetKey = (url) => String(url).split("?")[0];
+        const getBootAsset = (url) => bootAssetMap.get(url) || bootAssetMap.get(normalizeAssetKey(url));
+        const getBootObjectUrl = (url) => getBootAsset(url)?.objectUrl || url;
+        const hideLoader = () => {
+          if (bootReady) {
+            loader.classList.add("is-hidden");
+          }
+        };
+        const setBootProgress = (value, label = "", file = "") => {
+          bootProgress = clamp(value);
+          setCss("--boot-progress", bootProgress.toFixed(4));
+          setCss("--boot-hue", (190 + bootProgress * 170).toFixed(1));
+          if (loaderPercent) {
+            loaderPercent.textContent = `${Math.round(bootProgress * 100)}%`;
+          }
+          if (loaderBar) {
+            loaderBar.style.width = `${(bootProgress * 100).toFixed(2)}%`;
+          }
+          if (label && loaderText) {
+            loaderText.textContent = label;
+          }
+          if (file && loaderFile) {
+            loaderFile.textContent = file;
+          }
+        };
+        const showLoadError = (message = "Media files were not found. Make sure the assets folder was uploaded together with index.html") => {
+          document.body.dataset.bootState = "error";
           loader.classList.remove("is-hidden");
-          loaderText.textContent = "Media files were not found. Make sure the assets folder was uploaded to Netlify together with index.html";
+          loaderText.textContent = message;
+          if (loaderRetry) {
+            loaderRetry.hidden = false;
+          }
+        };
+
+        const buildBootManifest = () => {
+          const assets = [];
+          for (let index = 0; index < FRAME_COUNT; index += 1) {
+            const url = framePath(index);
+            assets.push({
+              key: url,
+              url,
+              kind: "frame",
+              index,
+              decode: deviceProfile.decodeFrame(index),
+              label: `Binding book frame ${index + 1} of ${FRAME_COUNT}`
+            });
+          }
+
+          assets.push(
+            {
+              key: "assets/shot-2/enter-book.mp4",
+              url: "assets/shot-2/enter-book.mp4?v=20260524-wandstorm",
+              kind: "video",
+              label: "Loading the entrance video"
+            },
+            {
+              key: "assets/shot-3/links-gallery.webp",
+              url: "assets/shot-3/links-gallery.webp",
+              kind: "image",
+              decode: true,
+              label: "Preparing the video-window gallery"
+            },
+            {
+              key: "assets/shot-3/links-gallery.png",
+              url: "assets/shot-3/links-gallery.png",
+              kind: "image",
+              decode: false,
+              label: "Preparing the gallery fallback"
+            },
+            {
+              key: "assets/shot-3/links-depth.png",
+              url: "assets/shot-3/links-depth.png",
+              kind: "image",
+              decode: deviceProfile.mode !== "constrained",
+              label: "Reading the depth map"
+            },
+            {
+              key: "assets/shot-4-5/shot-4-5-continuity-20260524.jpg",
+              url: "assets/shot-4-5/shot-4-5-continuity-20260524.jpg",
+              kind: "image",
+              decode: true,
+              label: "Stitching the final world"
+            },
+            {
+              key: "assets/loader/hayotzer-loader-portal.png",
+              url: "assets/loader/hayotzer-loader-portal.png",
+              kind: "image",
+              decode: true,
+              label: "Igniting the 3D portal"
+            }
+          );
+
+          return assets;
+        };
+
+        const reportBootAssetProgress = (asset, fraction = 0) => {
+          bootActiveFractions.set(asset.key, clamp(fraction));
+          const active = [...bootActiveFractions.values()].reduce((sum, amount) => sum + amount, 0);
+          setBootProgress((bootCompletedAssets + active) / Math.max(1, bootAssetTotal), asset.label, normalizeAssetKey(asset.url));
+        };
+
+        const decodeImage = (src) => new Promise((resolve, reject) => {
+          const image = new Image();
+          image.decoding = "async";
+          image.loading = "eager";
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+          image.src = src;
+          if (image.decode) {
+            image.decode().then(() => resolve(image)).catch(() => {
+              if (image.complete && image.naturalWidth > 0) {
+                resolve(image);
+              }
+            });
+          }
+        });
+
+        const loadVideoDirect = (asset) => new Promise((resolve, reject) => {
+          const probe = document.createElement("video");
+          let done = false;
+          const finish = () => {
+            if (done) {
+              return;
+            }
+            done = true;
+            resolve({ objectUrl: asset.url });
+          };
+          const fail = () => {
+            if (done) {
+              return;
+            }
+            done = true;
+            reject(new Error(`Video failed to load: ${asset.url}`));
+          };
+          probe.preload = "auto";
+          probe.muted = true;
+          probe.playsInline = true;
+          probe.addEventListener("canplaythrough", finish, { once: true });
+          probe.addEventListener("loadeddata", () => window.setTimeout(finish, 180), { once: true });
+          probe.addEventListener("error", fail, { once: true });
+          window.setTimeout(finish, 4500);
+          probe.src = asset.url;
+          probe.load();
+        });
+
+        const fetchAssetBlob = async (asset) => {
+          if (window.location.protocol === "file:") {
+            if (asset.kind === "video") {
+              return loadVideoDirect(asset);
+            }
+            const image = await decodeImage(asset.url);
+            return { objectUrl: asset.url, image };
+          }
+
+          const response = await fetch(asset.url, { cache: "force-cache" });
+          if (!response.ok) {
+            throw new Error(`${response.status} ${response.statusText}`);
+          }
+
+          const total = Number(response.headers.get("content-length") || 0);
+          if (!response.body || !total) {
+            const blob = await response.blob();
+            return { blob, objectUrl: URL.createObjectURL(blob) };
+          }
+
+          const reader = response.body.getReader();
+          const chunks = [];
+          let loaded = 0;
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              break;
+            }
+            chunks.push(value);
+            loaded += value.byteLength;
+            reportBootAssetProgress(asset, loaded / total);
+          }
+
+          const blob = new Blob(chunks, { type: response.headers.get("content-type") || undefined });
+          return { blob, objectUrl: URL.createObjectURL(blob) };
+        };
+
+        const loadBootAsset = async (asset) => {
+          let lastError = null;
+          for (let attempt = 1; attempt <= 3; attempt += 1) {
+            try {
+              reportBootAssetProgress(asset, 0.02);
+              const loaded = await fetchAssetBlob(asset);
+              let decodedImage = loaded.image || null;
+              if (asset.kind !== "video" && asset.decode && !decodedImage) {
+                decodedImage = await decodeImage(loaded.objectUrl);
+              }
+
+              const record = {
+                ...loaded,
+                image: decodedImage,
+                asset,
+                objectUrl: loaded.objectUrl || asset.url
+              };
+
+              bootAssetMap.set(asset.key, record);
+              bootAssetMap.set(asset.url, record);
+              bootAssetMap.set(normalizeAssetKey(asset.url), record);
+
+              if (asset.kind === "frame" && decodedImage) {
+                frames[asset.index] = decodedImage;
+              }
+
+              bootActiveFractions.delete(asset.key);
+              bootCompletedAssets += 1;
+              setBootProgress(bootCompletedAssets / Math.max(1, bootAssetTotal), asset.label, normalizeAssetKey(asset.url));
+              return record;
+            } catch (error) {
+              lastError = error;
+              loaderText.textContent = `Retrying ${normalizeAssetKey(asset.url)} (${attempt}/3)`;
+              await new Promise((resolve) => window.setTimeout(resolve, 220 * attempt));
+            }
+          }
+
+          bootActiveFractions.delete(asset.key);
+          throw new Error(`${normalizeAssetKey(asset.url)} failed: ${lastError?.message || "unknown error"}`);
+        };
+
+        const runBootQueue = async (assets) => {
+          let cursor = 0;
+          const workerCount = Math.min(deviceProfile.concurrency, assets.length);
+          const workers = Array.from({ length: workerCount }, async () => {
+            while (cursor < assets.length) {
+              const asset = assets[cursor];
+              cursor += 1;
+              await loadBootAsset(asset);
+            }
+          });
+          await Promise.all(workers);
+        };
+
+        const applyBootAssets = () => {
+          const videoAsset = getBootAsset("assets/shot-2/enter-book.mp4");
+          if (videoAsset?.objectUrl) {
+            video.src = videoAsset.objectUrl;
+          }
+
+          const continuityImage = document.querySelector(".shot-continuity-bg img");
+          const continuityAsset = getBootAsset("assets/shot-4-5/shot-4-5-continuity-20260524.jpg");
+          if (continuityImage && continuityAsset?.objectUrl) {
+            continuityImage.src = continuityAsset.objectUrl;
+          }
+
+          const fragmentAsset = getBootAsset("assets/shot-3/links-gallery.webp");
+          if (fragmentAsset?.objectUrl) {
+            setCss("--links-fragment-image", `url("${fragmentAsset.objectUrl}")`);
+          }
+        };
+
+        const finishBoot = () => {
+          bootReady = true;
+          document.body.dataset.bootState = "ready";
+          if (loaderRetry) {
+            loaderRetry.hidden = true;
+          }
+          window.scrollTo(0, 0);
+          resizeCanvas();
+          resizeMagicCanvas();
+          resizeGameCanvas();
+          resetGame();
+          applyBootAssets();
+          loadedCount = frames.filter(Boolean).length;
+          preloadFrames();
+          video.load();
+          updateScene();
+          setBootProgress(1, "The world is ready. Opening...", "complete");
+          window.setTimeout(hideLoader, 420);
+          window.setTimeout(() => {
+            document.body.dataset.bootState = "complete";
+          }, 980);
+        };
+
+        const startBoot = async () => {
+          if (bootStarted) {
+            return;
+          }
+
+          bootStarted = true;
+          bootReady = false;
+          bootErrors = [];
+          bootCompletedAssets = 0;
+          bootAssetTotal = 0;
+          bootActiveFractions.clear();
+          bootAssetMap.clear();
+          loader.classList.remove("is-hidden");
+          document.body.dataset.bootState = "loading";
+          if (loaderRetry) {
+            loaderRetry.hidden = true;
+          }
+          if (loaderMode) {
+            loaderMode.textContent = deviceProfile.label;
+          }
+          setBootProgress(0, "Preparing the first spell...", "boot manifest");
+
+          const assets = buildBootManifest();
+          bootAssetTotal = assets.length;
+
+          try {
+            await runBootQueue(assets);
+            finishBoot();
+          } catch (error) {
+            bootStarted = false;
+            bootErrors.push(error);
+            showLoadError(`The world could not fully load: ${error.message}`);
+          }
         };
 
         const resizeCanvas = () => {
@@ -2514,6 +3117,12 @@
             return frames[index];
           }
 
+          const bootAsset = getBootAsset(framePath(index));
+          if (bootAsset?.image) {
+            frames[index] = bootAsset.image;
+            return frames[index];
+          }
+
           const image = new Image();
           image.decoding = "async";
           image.loading = "eager";
@@ -2523,17 +3132,17 @@
               drawFrame(index, true);
             }
             if (loadedCount >= Math.min(FRAME_COUNT, 24)) {
-              loader.classList.add("is-hidden");
+              hideLoader();
             }
           };
           image.onerror = () => {
             loadErrors += 1;
             if (loadErrors <= 3) {
-              showLoadError();
+              showLoadError(`Book frame could not load: ${framePath(index)}`);
               console.error(`Missing frame: ${framePath(index)}`);
             }
           };
-          image.src = framePath(index);
+          image.src = bootAsset?.objectUrl || framePath(index);
           frames[index] = image;
           return image;
         };
@@ -2838,11 +3447,11 @@
           linksWorld.querySelectorAll("img[data-src]").forEach((image) => {
             image.onerror = () => {
               if (image.dataset.fallbackSrc) {
-                image.src = image.dataset.fallbackSrc;
+                image.src = getBootObjectUrl(image.dataset.fallbackSrc);
                 image.removeAttribute("data-fallback-src");
               }
             };
-            image.src = image.dataset.src;
+            image.src = getBootObjectUrl(image.dataset.src);
             image.removeAttribute("data-src");
           });
         };
@@ -3901,6 +4510,9 @@
 
         const updateScene = () => {
           ticking = false;
+          if (!bootReady) {
+            return;
+          }
 
           const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
           const pageProgress = clamp(window.scrollY / maxScroll);
@@ -4219,13 +4831,8 @@
           requestUpdate();
         });
 
-        resizeCanvas();
-        resizeMagicCanvas();
-        resizeGameCanvas();
-        resetGame();
-        preloadFrames();
-        video.load();
-        updateScene();
+        loaderRetry.addEventListener("click", startBoot);
+        startBoot();
 
         window.render_game_to_text = renderGameToText;
         window.advanceTime = (milliseconds = 16) => {
@@ -4240,6 +4847,21 @@
         };
 
         window.__hayotzerDebug = {
+          get bootReady() {
+            return bootReady;
+          },
+          get bootProgress() {
+            return bootProgress;
+          },
+          get bootErrors() {
+            return bootErrors.map((error) => error.message);
+          },
+          get loadedBootAssets() {
+            return bootCompletedAssets;
+          },
+          get bootMode() {
+            return deviceProfile.mode;
+          },
           get progress() {
             return latestProgress;
           },
