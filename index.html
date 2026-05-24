@@ -186,6 +186,7 @@
       }
 
       body[data-shot-break="active"] .links-pan-button,
+      body[data-shot-break="active"] .links-skip-to-game-button,
       body[data-shot-break="active"] .video-hotspot,
       body[data-shot-break="active"] .links-hint {
         opacity: 0;
@@ -1193,6 +1194,131 @@
       .links-pan-button--right:hover,
       .links-pan-button--right:focus-visible {
         transform: translateY(-50%) translateX(0.2rem);
+      }
+
+      .links-skip-to-game-button {
+        position: fixed;
+        z-index: 9;
+        right: clamp(1rem, 12vw, 15rem);
+        bottom: max(1.1rem, env(safe-area-inset-bottom, 0rem) + 1.1rem);
+        width: clamp(4.2rem, 8.2vw, 6.4rem);
+        aspect-ratio: 1;
+        border: 1px solid rgba(255, 255, 255, 0.42);
+        border-radius: 50%;
+        appearance: none;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 32% 23%, rgba(255, 255, 255, 0.95) 0 0.34rem, transparent 0.38rem),
+          radial-gradient(circle at 38% 28%, #fff9b2 0%, #ffe600 31%, #ffbd15 58%, #ff6a00 100%);
+        box-shadow:
+          inset -0.7rem -0.9rem 1.1rem rgba(120, 42, 0, 0.32),
+          inset 0.42rem 0.5rem 0.75rem rgba(255, 255, 255, 0.56),
+          0 0 1.4rem rgba(247, 200, 115, 0.42),
+          0 0 3rem rgba(255, 91, 187, 0.24),
+          0 1rem 2.2rem rgba(0, 0, 0, 0.52);
+        transform:
+          translate3d(0, 0.9rem, 0)
+          perspective(760px)
+          rotateX(14deg)
+          rotateY(-11deg)
+          scale(0.92);
+        transition:
+          opacity 420ms ease,
+          transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 320ms ease,
+          filter 320ms ease;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      body[data-shot-three="active"] .links-skip-to-game-button {
+        opacity: 0.96;
+        pointer-events: auto;
+        transform:
+          translate3d(0, 0, 0)
+          perspective(760px)
+          rotateX(14deg)
+          rotateY(-11deg)
+          scale(0.98);
+        animation: linksSkipGlow 3.2s ease-in-out infinite;
+      }
+
+      .links-skip-to-game-button::before,
+      .links-skip-to-game-button::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        pointer-events: none;
+        background: #ff3131;
+        filter:
+          drop-shadow(0 0 0.25rem rgba(255, 49, 49, 0.72))
+          drop-shadow(0 0 0.9rem rgba(255, 245, 80, 0.35));
+      }
+
+      .links-skip-to-game-button::before {
+        top: 22%;
+        width: 0.23rem;
+        height: 48%;
+        border-radius: 999px;
+        transform: translateX(-50%);
+      }
+
+      .links-skip-to-game-button::after {
+        top: 52%;
+        width: 38%;
+        height: 38%;
+        border-right: 0.25rem solid #ff3131;
+        border-bottom: 0.25rem solid #ff3131;
+        background: transparent;
+        transform: translateX(-50%) rotate(45deg);
+      }
+
+      .links-skip-to-game-button:hover,
+      .links-skip-to-game-button:focus-visible {
+        opacity: 1;
+        filter: saturate(1.12) brightness(1.06);
+        box-shadow:
+          inset -0.7rem -0.9rem 1.1rem rgba(120, 42, 0, 0.28),
+          inset 0.42rem 0.5rem 0.75rem rgba(255, 255, 255, 0.64),
+          0 0 1.8rem rgba(247, 200, 115, 0.56),
+          0 0 3.6rem rgba(103, 248, 255, 0.24),
+          0 1.1rem 2.4rem rgba(0, 0, 0, 0.55);
+        transform:
+          translate3d(0, -0.15rem, 0)
+          perspective(760px)
+          rotateX(10deg)
+          rotateY(-8deg)
+          scale(1.035);
+      }
+
+      .links-skip-to-game-button:disabled {
+        cursor: wait;
+        filter: saturate(0.8) brightness(0.92);
+      }
+
+      @keyframes linksSkipGlow {
+        0%,
+        100% {
+          filter: saturate(1) brightness(1);
+          box-shadow:
+            inset -0.7rem -0.9rem 1.1rem rgba(120, 42, 0, 0.32),
+            inset 0.42rem 0.5rem 0.75rem rgba(255, 255, 255, 0.56),
+            0 0 1.4rem rgba(247, 200, 115, 0.42),
+            0 0 3rem rgba(255, 91, 187, 0.24),
+            0 1rem 2.2rem rgba(0, 0, 0, 0.52);
+        }
+
+        50% {
+          filter: saturate(1.12) brightness(1.08);
+          box-shadow:
+            inset -0.7rem -0.9rem 1.1rem rgba(120, 42, 0, 0.26),
+            inset 0.42rem 0.5rem 0.75rem rgba(255, 255, 255, 0.66),
+            0 0 1.9rem rgba(247, 200, 115, 0.58),
+            0 0 3.8rem rgba(255, 91, 187, 0.34),
+            0 1rem 2.2rem rgba(0, 0, 0, 0.52);
+        }
       }
 
       @keyframes videoFloat {
@@ -2394,6 +2520,7 @@
         <span class="break-orb" data-start-x="-8" data-start-y="72" data-end-x="39" data-end-y="61" data-delay="0.34" data-trail="12"></span>
         <span class="break-orb" data-start-x="108" data-start-y="76" data-end-x="74" data-end-y="58" data-delay="0.5" data-trail="196"></span>
         <div class="break-flash" aria-hidden="true"></div>
+        <button id="linksSkipToGameButton" class="links-skip-to-game-button" type="button" aria-label="Enter the game shot"></button>
         <button class="links-pan-button links-pan-button--left" type="button" data-pan="-1" aria-label="Move panorama left"></button>
         <button class="links-pan-button links-pan-button--right" type="button" data-pan="1" aria-label="Move panorama right"></button>
       </section>
@@ -2579,6 +2706,7 @@
         const sceneLead = document.getElementById("sceneLead");
         const sceneBody = document.getElementById("sceneBody");
         const skipToGameButton = document.getElementById("skipToGameButton");
+        const linksSkipToGameButton = document.getElementById("linksSkipToGameButton");
         const loader = document.getElementById("loader");
         const loaderText = document.getElementById("loaderText");
         const loaderBar = document.getElementById("loaderBar");
@@ -4249,7 +4377,7 @@
         };
 
         const beginPanDrag = (event) => {
-          if (!shotThreeStarted || event.target.closest(".video-hotspot, .links-pan-button")) {
+          if (!shotThreeStarted || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button")) {
             return;
           }
 
@@ -4277,7 +4405,7 @@
         };
 
         const beginPanTouch = (event) => {
-          if (!shotThreeStarted || event.touches.length !== 1 || event.target.closest(".video-hotspot, .links-pan-button")) {
+          if (!shotThreeStarted || event.touches.length !== 1 || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button")) {
             return;
           }
 
@@ -4318,7 +4446,7 @@
             return true;
           }
 
-          return Boolean(target.closest("iframe, input, textarea, select, [contenteditable], .video-modal, .game-stage, .game-button, .links-pan-button, .skip-to-game-button"));
+          return Boolean(target.closest("iframe, input, textarea, select, [contenteditable], .video-modal, .game-stage, .game-button, .links-pan-button, .links-skip-to-game-button, .skip-to-game-button"));
         };
 
         const beginControlledTouchScroll = (event) => {
@@ -4453,6 +4581,23 @@
             await animateScrollToProgress(scrollStops.gameStart + 0.002, constrainedDevice ? 840 : 1040);
           } finally {
             skipToGameButton.disabled = false;
+          }
+        };
+
+        const linksAdvanceToGame = async () => {
+          if (linksSkipToGameButton.disabled) {
+            return;
+          }
+
+          linksSkipToGameButton.disabled = true;
+          warmShotThreeAssets();
+          triggerMagicBurst(constrainedDevice ? 0.34 : 0.62);
+
+          try {
+            await animateScrollToProgress(scrollStops.breakStart, constrainedDevice ? 360 : 460);
+            await animateScrollToProgress(scrollStops.gameStart + 0.002, constrainedDevice ? 760 : 940);
+          } finally {
+            linksSkipToGameButton.disabled = false;
           }
         };
 
@@ -4639,6 +4784,7 @@
         window.addEventListener("touchend", endControlledTouchScroll, { passive: true });
         window.addEventListener("touchcancel", endControlledTouchScroll, { passive: true });
         skipToGameButton.addEventListener("click", autoAdvanceToGame);
+        linksSkipToGameButton.addEventListener("click", linksAdvanceToGame);
 
         linksShot.addEventListener("pointermove", (event) => {
           updateDepthParallax(event);
