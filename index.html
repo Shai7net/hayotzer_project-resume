@@ -81,7 +81,6 @@
         --boot-progress: 0;
         --boot-hue: 190;
         --links-fragment-image: url("assets/shot-3/links-gallery.webp");
-        --hotspot-crop-image: url("assets/shot-3/links-gallery.webp");
       }
 
       * {
@@ -1054,22 +1053,17 @@
         -webkit-clip-path: var(--shape, polygon(6% 5%, 96% 0, 94% 94%, 4% 100%));
         clip-path: var(--shape, polygon(6% 5%, 96% 0, 94% 94%, 4% 100%));
         background:
-          linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 32%),
-          var(--hotspot-crop-image),
-          rgba(63, 12, 123, 0.015);
-        background-size:
-          auto,
-          var(--crop-size-x, 1000%) var(--crop-size-y, 1000%),
-          auto;
-        background-position:
-          center,
-          var(--crop-pos-x, 50%) var(--crop-pos-y, 50%),
-          center;
+          linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 34%),
+          var(--hotspot-image, none),
+          rgba(103, 248, 255, 0.012);
+        background-size: auto, 100% 100%, auto;
+        background-position: center;
         background-repeat: no-repeat;
-        -webkit-backdrop-filter: brightness(calc(1.03 + var(--depth-brightness, 0.08))) saturate(calc(1.02 + var(--depth-brightness, 0.08)));
-        backdrop-filter: brightness(calc(1.03 + var(--depth-brightness, 0.08))) saturate(calc(1.02 + var(--depth-brightness, 0.08)));
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
         box-shadow:
           inset 0 0 0 1px rgba(255, 245, 199, var(--depth-line-alpha, 0.16)),
+          inset 0 0 1.1rem rgba(255, 255, 255, var(--depth-glass-alpha, 0.035)),
           0 0 0.75rem rgba(164, 75, 255, var(--depth-glow-alpha, 0.14)),
           0 0 var(--depth-aura-blur, 1.4rem) rgba(103, 248, 255, var(--depth-aura-alpha, 0.1)),
           0 var(--depth-shadow-y, 1rem) var(--depth-shadow-blur, 2.4rem) rgba(0, 0, 0, var(--depth-shadow-alpha, 0.28));
@@ -1083,7 +1077,6 @@
           transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
           border-color 420ms ease,
           box-shadow 420ms ease,
-          background 420ms ease,
           filter 420ms ease;
         animation: videoFloat 6.2s ease-in-out infinite;
         animation-delay: var(--float-delay, 0s);
@@ -1104,11 +1097,11 @@
 
       .video-hotspot::before {
         background:
-          radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 42%), rgba(255, 255, 255, 0.62), transparent 0.78rem),
-          linear-gradient(120deg, transparent 8%, rgba(255, 255, 255, 0.28), transparent 30%),
-          linear-gradient(90deg, rgba(103, 248, 255, 0.16), rgba(255, 91, 187, 0.12));
+          radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 42%), rgba(255, 255, 255, 0.42), transparent 0.82rem),
+          linear-gradient(120deg, transparent 10%, rgba(255, 255, 255, 0.16), transparent 31%),
+          linear-gradient(90deg, rgba(103, 248, 255, 0.09), rgba(255, 91, 187, 0.075));
         mix-blend-mode: screen;
-        opacity: var(--depth-sheen-alpha, 0.05);
+        opacity: var(--depth-sheen-alpha, 0.06);
       }
 
       .video-hotspot::after {
@@ -1130,14 +1123,19 @@
       .video-hotspot:focus-visible {
         z-index: 5;
         background:
-          linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 34%),
-          rgba(124, 40, 255, 0.06);
+          linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 34%),
+          var(--hotspot-image, none),
+          rgba(124, 40, 255, 0.025);
+        background-size: auto, 100% 100%, auto;
+        background-position: center;
+        background-repeat: no-repeat;
         box-shadow:
-          inset 0 0 0 1px rgba(255, 245, 199, 0.58),
+          inset 0 0 0 1px rgba(255, 245, 199, 0.48),
+          inset 0 0 1.3rem rgba(255, 255, 255, 0.045),
           0 0 1.2rem rgba(103, 248, 255, 0.42),
           0 0 2.3rem rgba(255, 91, 187, 0.28),
           0 1.5rem 3rem rgba(0, 0, 0, 0.34);
-        filter: saturate(1.02) brightness(1.04);
+        filter: saturate(1.02) brightness(1.02);
         transform:
           perspective(720px)
           rotateX(var(--tilt-x, 0deg))
@@ -2522,19 +2520,19 @@
         <div class="links-world">
           <img data-src="assets/shot-3/links-gallery.webp" data-fallback-src="assets/shot-3/links-gallery.png" alt="" aria-hidden="true" draggable="false" decoding="async" />
           <img class="links-depth-map" data-src="assets/shot-3/links-depth-20260524-v2.png" alt="" aria-hidden="true" draggable="false" decoding="async" />
-          <button class="video-hotspot" type="button" style="--x: 6.7%; --y: 2.6%; --w: 17.8%; --h: 22%; --shape: polygon(8% 0, 100% 13%, 92% 100%, 0 74%); --float-delay: -0.2s; --tilt-y: -8deg;" data-title="Opening identity" data-youtube="https://www.youtube.com/watch?v=wQfYg-X_nWo&t=2s" aria-label="Open Opening identity"></button>
-          <button class="video-hotspot" type="button" style="--x: 31.2%; --y: 8.8%; --w: 16.6%; --h: 14.8%; --shape: polygon(0 21%, 92% 0, 100% 82%, 7% 100%); --float-delay: -1.1s; --tilt-y: 4deg;" data-title="Guitar apparition" data-youtube="https://www.youtube.com/watch?v=r3VTSucVRqY" aria-label="Open Guitar apparition"></button>
-          <button class="video-hotspot" type="button" style="--x: 60%; --y: 5.8%; --w: 20.2%; --h: 28%; --shape: polygon(5% 6%, 94% 0, 100% 78%, 13% 100%, 0 28%); --float-delay: -2.4s; --tilt-y: 8deg;" data-title="Dinosaur chase" data-youtube="https://www.youtube.com/watch?v=7NoQThZ3UuI" aria-label="Open Dinosaur chase"></button>
-          <button class="video-hotspot" type="button" style="--x: 82%; --y: 19.6%; --w: 15.1%; --h: 25%; --shape: polygon(2% 8%, 100% 0, 94% 88%, 0 100%); --float-delay: -3s; --tilt-y: 9deg;" data-title="Tiger music world" data-youtube="https://www.youtube.com/watch?v=gWo-eveJRMY" aria-label="Open Tiger music world"></button>
-          <button class="video-hotspot" type="button" style="--x: 14%; --y: 30.2%; --w: 15.4%; --h: 16.4%; --shape: polygon(11% 0, 100% 18%, 88% 100%, 0 76%); --float-delay: -0.8s; --tilt-y: -6deg;" data-title="Dark city creature" data-youtube="https://www.youtube.com/watch?v=qGd-axzPo8w" aria-label="Open Dark city creature"></button>
-          <button class="video-hotspot" type="button" style="--x: 1.9%; --y: 51.2%; --w: 22.9%; --h: 22.7%; --shape: polygon(0 13%, 94% 0, 100% 79%, 8% 100%); --float-delay: -2s; --tilt-y: -11deg;" data-title="Animated heroine world" data-youtube="https://www.youtube.com/watch?v=YjyU59Xr9qU" aria-label="Open Animated heroine world"></button>
-          <button class="video-hotspot" type="button" style="--x: 30.1%; --y: 52%; --w: 8%; --h: 11.2%; --shape: polygon(8% 5%, 90% 0, 100% 83%, 13% 100%, 0 28%); --float-delay: -3.6s; --tilt-y: -4deg;" data-title="Moonlit horse" data-youtube="https://www.youtube.com/watch?v=_Pl8aqONgYk" aria-label="Open Moonlit horse"></button>
-          <button class="video-hotspot" type="button" style="--x: 43.5%; --y: 41%; --w: 6.8%; --h: 7.2%; --shape: polygon(6% 12%, 93% 0, 100% 75%, 14% 100%, 0 32%); --float-delay: -2.7s; --tilt-y: 2deg;" data-title="Central portal memory" data-youtube="https://www.youtube.com/watch?v=6pLwN1a1ko" aria-label="Open Central portal memory"></button>
-          <button class="video-hotspot" type="button" style="--x: 54.3%; --y: 46.6%; --w: 21.2%; --h: 9.8%; --shape: polygon(4% 0, 100% 8%, 94% 100%, 0 82%); --float-delay: -1.5s; --tilt-y: 5deg;" data-title="Cinematic city fragment" data-youtube="https://www.youtube.com/watch?v=dn7hREv-MVs" aria-label="Open Cinematic city fragment"></button>
-          <button class="video-hotspot" type="button" style="--x: 72.4%; --y: 38.7%; --w: 7.8%; --h: 12.7%; --shape: polygon(8% 0, 100% 9%, 92% 100%, 0 83%); --float-delay: -4.2s; --tilt-y: 7deg;" data-title="Abstract neon helmet" data-youtube="https://www.youtube.com/watch?v=8OSAIXFcnJw&t=17s" aria-label="Open Abstract neon helmet"></button>
-          <button class="video-hotspot" type="button" style="--x: 37%; --y: 71%; --w: 13.3%; --h: 11.8%; --shape: polygon(3% 11%, 96% 0, 100% 82%, 7% 100%, 0 26%); --float-delay: -0.5s; --tilt-y: -3deg;" data-title="Short portal piece" data-youtube="https://www.youtube.com/shorts/K1NqrB9rbc4" aria-label="Open Short portal piece"></button>
-          <button class="video-hotspot" type="button" style="--x: 53.7%; --y: 74.3%; --w: 19.8%; --h: 17.3%; --shape: polygon(4% 4%, 94% 0, 100% 82%, 10% 100%, 0 25%); --float-delay: -2.9s; --tilt-y: 3deg;" data-title="Field monologue" data-youtube="https://www.youtube.com/watch?v=r8hgc_9hFag" aria-label="Open Field monologue"></button>
-          <button class="video-hotspot" type="button" style="--x: 73.7%; --y: 56.9%; --w: 21.1%; --h: 27.2%; --shape: polygon(7% 5%, 95% 0, 100% 69%, 84% 100%, 8% 87%, 0 22%); --float-delay: -1.8s; --tilt-y: 10deg;" data-title="Claustrophobic in open spaces" data-youtube="https://www.youtube.com/watch?v=sedd2J_a4Wg&t=11s" aria-label="Open Claustrophobic in open spaces"></button>
+          <button class="video-hotspot" type="button" style="--x: 6.7%; --y: 2.6%; --w: 17.8%; --h: 22%; --shape: polygon(8% 0, 100% 13%, 92% 100%, 0 74%); --float-delay: -0.2s; --tilt-y: -8deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-01-v2.webp');" data-title="Opening identity" data-youtube="https://www.youtube.com/watch?v=wQfYg-X_nWo&t=2s" aria-label="Open Opening identity"></button>
+          <button class="video-hotspot" type="button" style="--x: 31.2%; --y: 8.8%; --w: 16.6%; --h: 14.8%; --shape: polygon(0 21%, 92% 0, 100% 82%, 7% 100%); --float-delay: -1.1s; --tilt-y: 4deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-02-v2.webp');" data-title="Guitar apparition" data-youtube="https://www.youtube.com/watch?v=r3VTSucVRqY" aria-label="Open Guitar apparition"></button>
+          <button class="video-hotspot" type="button" style="--x: 60%; --y: 5.8%; --w: 20.2%; --h: 28%; --shape: polygon(5% 6%, 94% 0, 100% 78%, 13% 100%, 0 28%); --float-delay: -2.4s; --tilt-y: 8deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-03-v2.webp');" data-title="Dinosaur chase" data-youtube="https://www.youtube.com/watch?v=7NoQThZ3UuI" aria-label="Open Dinosaur chase"></button>
+          <button class="video-hotspot" type="button" style="--x: 82%; --y: 19.6%; --w: 15.1%; --h: 25%; --shape: polygon(2% 8%, 100% 0, 94% 88%, 0 100%); --float-delay: -3s; --tilt-y: 9deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-04-v2.webp');" data-title="Tiger music world" data-youtube="https://www.youtube.com/watch?v=gWo-eveJRMY" aria-label="Open Tiger music world"></button>
+          <button class="video-hotspot" type="button" style="--x: 14%; --y: 30.2%; --w: 15.4%; --h: 16.4%; --shape: polygon(11% 0, 100% 18%, 88% 100%, 0 76%); --float-delay: -0.8s; --tilt-y: -6deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-05-v2.webp');" data-title="Dark city creature" data-youtube="https://www.youtube.com/watch?v=qGd-axzPo8w" aria-label="Open Dark city creature"></button>
+          <button class="video-hotspot" type="button" style="--x: 1.9%; --y: 51.2%; --w: 22.9%; --h: 22.7%; --shape: polygon(0 13%, 94% 0, 100% 79%, 8% 100%); --float-delay: -2s; --tilt-y: -11deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-06-v2.webp');" data-title="Animated heroine world" data-youtube="https://www.youtube.com/watch?v=YjyU59Xr9qU" aria-label="Open Animated heroine world"></button>
+          <button class="video-hotspot" type="button" style="--x: 30.1%; --y: 52%; --w: 8%; --h: 11.2%; --shape: polygon(8% 5%, 90% 0, 100% 83%, 13% 100%, 0 28%); --float-delay: -3.6s; --tilt-y: -4deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-07-v2.webp');" data-title="Moonlit horse" data-youtube="https://www.youtube.com/watch?v=_Pl8aqONgYk" aria-label="Open Moonlit horse"></button>
+          <button class="video-hotspot" type="button" style="--x: 43.5%; --y: 41%; --w: 6.8%; --h: 7.2%; --shape: polygon(6% 12%, 93% 0, 100% 75%, 14% 100%, 0 32%); --float-delay: -2.7s; --tilt-y: 2deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-08-v2.webp');" data-title="Central portal memory" data-youtube="https://www.youtube.com/watch?v=6pLwN1a1ko" aria-label="Open Central portal memory"></button>
+          <button class="video-hotspot" type="button" style="--x: 54.3%; --y: 46.6%; --w: 21.2%; --h: 9.8%; --shape: polygon(4% 0, 100% 8%, 94% 100%, 0 82%); --float-delay: -1.5s; --tilt-y: 5deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-09-v2.webp');" data-title="Cinematic city fragment" data-youtube="https://www.youtube.com/watch?v=dn7hREv-MVs" aria-label="Open Cinematic city fragment"></button>
+          <button class="video-hotspot" type="button" style="--x: 72.4%; --y: 38.7%; --w: 7.8%; --h: 12.7%; --shape: polygon(8% 0, 100% 9%, 92% 100%, 0 83%); --float-delay: -4.2s; --tilt-y: 7deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-10-v2.webp');" data-title="Abstract neon helmet" data-youtube="https://www.youtube.com/watch?v=8OSAIXFcnJw&t=17s" aria-label="Open Abstract neon helmet"></button>
+          <button class="video-hotspot" type="button" style="--x: 37%; --y: 71%; --w: 13.3%; --h: 11.8%; --shape: polygon(3% 11%, 96% 0, 100% 82%, 7% 100%, 0 26%); --float-delay: -0.5s; --tilt-y: -3deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-11-v2.webp');" data-title="Short portal piece" data-youtube="https://www.youtube.com/shorts/K1NqrB9rbc4" aria-label="Open Short portal piece"></button>
+          <button class="video-hotspot" type="button" style="--x: 53.7%; --y: 74.3%; --w: 19.8%; --h: 17.3%; --shape: polygon(4% 4%, 94% 0, 100% 82%, 10% 100%, 0 25%); --float-delay: -2.9s; --tilt-y: 3deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-12-v2.webp');" data-title="Field monologue" data-youtube="https://www.youtube.com/watch?v=r8hgc_9hFag" aria-label="Open Field monologue"></button>
+          <button class="video-hotspot" type="button" style="--x: 73.7%; --y: 56.9%; --w: 21.1%; --h: 27.2%; --shape: polygon(7% 5%, 95% 0, 100% 69%, 84% 100%, 8% 87%, 0 22%); --float-delay: -1.8s; --tilt-y: 10deg; --hotspot-image: url('assets/shot-3/hotspots/hotspot-13-v2.webp');" data-title="Claustrophobic in open spaces" data-youtube="https://www.youtube.com/watch?v=sedd2J_a4Wg&t=11s" aria-label="Open Claustrophobic in open spaces"></button>
         </div>
         <div class="links-shatter-layer" aria-hidden="true">
           <span class="shatter-fragment" data-dx="-38" data-dy="-20" data-rot="-13" data-delay="0.03" style="--col: 0; --row: 0; --origin: 70% 62%; --hit-x: 68%; --hit-y: 70%; --cut: polygon(0 0, 100% 0, 88% 100%, 0 82%);"></span>
@@ -2993,6 +2991,18 @@
             }
           );
 
+          for (let index = 1; index <= 13; index += 1) {
+            const id = String(index).padStart(2, "0");
+            const url = `assets/shot-3/hotspots/hotspot-${id}-v2.webp`;
+            assets.push({
+              key: url,
+              url,
+              kind: "image",
+              decode: deviceProfile.mode === "aggressive",
+              label: `Carving floating video window ${index}`
+            });
+          }
+
           return assets;
         };
 
@@ -3153,7 +3163,6 @@
           const fragmentAsset = getBootAsset("assets/shot-3/links-gallery.webp");
           if (fragmentAsset?.objectUrl) {
             setCss("--links-fragment-image", `url("${fragmentAsset.objectUrl}")`);
-            setCss("--hotspot-crop-image", `url("${fragmentAsset.objectUrl}")`);
           }
         };
 
@@ -3678,21 +3687,12 @@
 
         const percentVar = (element, name) => Number.parseFloat(element.style.getPropertyValue(name)) || 0;
 
-        const setupHotspotCrops = () => {
+        const setupHotspotDepthAnchors = () => {
           videoHotspots.forEach((hotspot) => {
             const x = percentVar(hotspot, "--x");
             const y = percentVar(hotspot, "--y");
             const width = Math.max(0.1, percentVar(hotspot, "--w"));
             const height = Math.max(0.1, percentVar(hotspot, "--h"));
-            const cropSizeX = 10000 / width;
-            const cropSizeY = 10000 / height;
-            const cropPosX = x <= 0 ? 0 : (x / Math.max(0.1, 100 - width)) * 100;
-            const cropPosY = y <= 0 ? 0 : (y / Math.max(0.1, 100 - height)) * 100;
-
-            hotspot.style.setProperty("--crop-size-x", `${cropSizeX.toFixed(3)}%`);
-            hotspot.style.setProperty("--crop-size-y", `${cropSizeY.toFixed(3)}%`);
-            hotspot.style.setProperty("--crop-pos-x", `${cropPosX.toFixed(3)}%`);
-            hotspot.style.setProperty("--crop-pos-y", `${cropPosY.toFixed(3)}%`);
             hotspot.dataset.centerX = String((x + width / 2) / 100);
             hotspot.dataset.centerY = String((y + height / 2) / 100);
           });
@@ -3715,7 +3715,7 @@
 
         const sampleDepthForHotspots = () => {
           if (depthMapSampled || !linksDepthImage.complete || !linksDepthImage.naturalWidth) {
-            setupHotspotCrops();
+            setupHotspotDepthAnchors();
             updateHotspotDepthMotion();
             return;
           }
@@ -3725,7 +3725,7 @@
           sampleCanvas.height = linksDepthImage.naturalHeight;
           const sampleContext = sampleCanvas.getContext("2d", { willReadFrequently: true });
           if (!sampleContext) {
-            setupHotspotCrops();
+            setupHotspotDepthAnchors();
             updateHotspotDepthMotion();
             return;
           }
@@ -3760,8 +3760,8 @@
             hotspot.dataset.centerY = centerY.toFixed(4);
             hotspot.style.setProperty("--depth-lift", `${(8 + depth * 58).toFixed(2)}px`);
             hotspot.style.setProperty("--depth-scale", (0.982 + depth * 0.062).toFixed(4));
-            hotspot.style.setProperty("--depth-brightness", (depth * 0.16).toFixed(4));
             hotspot.style.setProperty("--depth-line-alpha", (0.12 + depth * 0.38).toFixed(4));
+            hotspot.style.setProperty("--depth-glass-alpha", (0.018 + depth * 0.055).toFixed(4));
             hotspot.style.setProperty("--depth-glow-alpha", (0.1 + depth * 0.34).toFixed(4));
             hotspot.style.setProperty("--depth-aura-alpha", (0.08 + depth * 0.28).toFixed(4));
             hotspot.style.setProperty("--depth-aura-blur", `${(1 + depth * 2.4).toFixed(2)}rem`);
@@ -3774,7 +3774,7 @@
           });
 
           depthMapSampled = true;
-          setupHotspotCrops();
+          setupHotspotDepthAnchors();
           updateHotspotDepthMotion();
         };
 
