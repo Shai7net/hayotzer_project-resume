@@ -959,6 +959,156 @@
           transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
       }
 
+      .links-guide {
+        position: fixed;
+        z-index: 12;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: clamp(1.1rem, 4vw, 3rem);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 50% 42%, rgba(247, 200, 115, 0.18), transparent 10rem),
+          radial-gradient(circle at 50% 50%, rgba(103, 248, 255, 0.14), transparent 24rem),
+          rgba(3, 2, 10, 0.34);
+        -webkit-backdrop-filter: blur(7px) saturate(1.18);
+        backdrop-filter: blur(7px) saturate(1.18);
+        transition:
+          opacity 420ms ease,
+          visibility 420ms ease;
+      }
+
+      .links-guide.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .links-guide__panel {
+        position: relative;
+        width: min(90vw, 38rem);
+        padding: clamp(1.2rem, 3.8vw, 2.45rem);
+        border: 1px solid rgba(247, 200, 115, 0.42);
+        border-radius: 0.35rem;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 28%),
+          radial-gradient(circle at 50% 0%, rgba(103, 248, 255, 0.16), transparent 18rem),
+          rgba(7, 4, 20, 0.74);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+          0 0 2rem rgba(247, 200, 115, 0.28),
+          0 0 5rem rgba(255, 91, 187, 0.22),
+          0 1.5rem 4rem rgba(0, 0, 0, 0.55);
+        text-align: center;
+        transform:
+          perspective(920px)
+          rotateX(7deg)
+          translate3d(0, 1rem, 0)
+          scale(0.96);
+        transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .links-guide.is-visible .links-guide__panel {
+        transform:
+          perspective(920px)
+          rotateX(0deg)
+          translate3d(0, 0, 0)
+          scale(1);
+      }
+
+      .links-guide__panel::before,
+      .links-guide__panel::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+      }
+
+      .links-guide__panel::before {
+        inset: -0.55rem;
+        border: 1px solid rgba(103, 248, 255, 0.18);
+        border-radius: inherit;
+        filter: blur(0.5px);
+      }
+
+      .links-guide__panel::after {
+        inset: 12%;
+        background:
+          radial-gradient(circle, rgba(255, 255, 255, 0.28) 0 1px, transparent 1.5px) 0 0 / 3.2rem 3.2rem;
+        opacity: 0.34;
+        mix-blend-mode: screen;
+      }
+
+      .links-guide h2 {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        color: #fff4c8;
+        font-family:
+          Copperplate,
+          "Copperplate Gothic Light",
+          Georgia,
+          serif;
+        font-size: clamp(2.15rem, 7.4vw, 5.9rem);
+        line-height: 0.9;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        text-shadow:
+          0 0.06em 0 #5b310b,
+          0 0.12em 0 #13070a,
+          0 0 1.1rem rgba(247, 200, 115, 0.38),
+          0 0 2.7rem rgba(103, 248, 255, 0.22);
+      }
+
+      .links-guide p {
+        position: relative;
+        z-index: 1;
+        margin: clamp(0.9rem, 2.4vw, 1.35rem) auto 0;
+        max-width: 27rem;
+        color: rgba(248, 242, 255, 0.82);
+        font-size: clamp(1rem, 2.2vw, 1.28rem);
+        font-weight: 700;
+        line-height: 1.55;
+        text-shadow: 0 0.12rem 0.7rem rgba(0, 0, 0, 0.7);
+      }
+
+      .links-guide__button {
+        position: relative;
+        z-index: 1;
+        margin-top: clamp(1rem, 2.8vw, 1.65rem);
+        min-width: 6.5rem;
+        min-height: 2.85rem;
+        border: 1px solid rgba(247, 200, 115, 0.68);
+        border-radius: 999px;
+        color: #fff4c8;
+        background:
+          radial-gradient(circle at 35% 16%, rgba(255, 255, 255, 0.42), transparent 28%),
+          linear-gradient(135deg, rgba(247, 200, 115, 0.32), rgba(255, 91, 187, 0.18)),
+          rgba(8, 4, 24, 0.62);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+          0 0 1.2rem rgba(247, 200, 115, 0.38),
+          0 0 2.4rem rgba(255, 91, 187, 0.2);
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.86rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .links-guide__button:hover,
+      .links-guide__button:focus-visible {
+        border-color: rgba(255, 246, 202, 0.9);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+          0 0 1.6rem rgba(247, 200, 115, 0.52),
+          0 0 3rem rgba(103, 248, 255, 0.22);
+      }
+
       .links-shatter-layer {
         position: absolute;
         z-index: 6;
@@ -1321,6 +1471,72 @@
       .links-skip-to-game-button:disabled {
         cursor: wait;
         filter: saturate(0.8) brightness(0.92);
+      }
+
+      .game-skip-to-contact-button {
+        position: fixed;
+        z-index: 18;
+        right: clamp(0.75rem, 4vw, 2.5rem);
+        top: 54%;
+        width: clamp(3.9rem, 6vw, 5.4rem);
+        aspect-ratio: 483 / 720;
+        border: 0;
+        appearance: none;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        background:
+          var(--links-skip-arrow-image) center / contain no-repeat;
+        filter:
+          drop-shadow(0 0 0.7rem rgba(247, 200, 115, 0.44))
+          drop-shadow(0 0 1.7rem rgba(103, 248, 255, 0.22))
+          drop-shadow(0 1rem 1.25rem rgba(0, 0, 0, 0.58));
+        transform:
+          translate3d(0.9rem, -50%, 0)
+          perspective(760px)
+          rotateX(14deg)
+          rotateY(-12deg)
+          scale(0.88);
+        transition:
+          opacity 420ms ease,
+          transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
+          filter 320ms ease;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      body[data-shot-four="active"] .game-skip-to-contact-button {
+        opacity: 0.94;
+        pointer-events: auto;
+        transform:
+          translate3d(0, -50%, 0)
+          perspective(760px)
+          rotateX(14deg)
+          rotateY(-12deg)
+          scale(0.96);
+        animation: linksSkipGlow 3.2s ease-in-out infinite;
+      }
+
+      .game-skip-to-contact-button:hover,
+      .game-skip-to-contact-button:focus-visible {
+        opacity: 1;
+        filter:
+          saturate(1.12)
+          brightness(1.07)
+          drop-shadow(0 0 1rem rgba(247, 200, 115, 0.62))
+          drop-shadow(0 0 2.4rem rgba(255, 91, 187, 0.26))
+          drop-shadow(0 1.1rem 1.35rem rgba(0, 0, 0, 0.62));
+        transform:
+          translate3d(-0.15rem, -50%, 0)
+          perspective(760px)
+          rotateX(10deg)
+          rotateY(-9deg)
+          scale(1.02);
+      }
+
+      .game-skip-to-contact-button:disabled {
+        cursor: wait;
+        filter: saturate(0.78) brightness(0.9);
       }
 
       @keyframes linksSkipGlow {
@@ -2339,6 +2555,19 @@
             rgba(8, 4, 24, 0.62);
         }
 
+        .links-guide__panel {
+          width: min(90vw, 25rem);
+          padding: 1.05rem;
+        }
+
+        .links-guide h2 {
+          font-size: clamp(1.9rem, 11vw, 3.2rem);
+        }
+
+        .links-guide p {
+          font-size: clamp(0.9rem, 4vw, 1.05rem);
+        }
+
         .video-modal {
           padding: 0.9rem;
         }
@@ -2405,6 +2634,12 @@
         .game-button {
           min-width: 2.65rem;
           min-height: 2.65rem;
+        }
+
+        .game-skip-to-contact-button {
+          top: 43%;
+          right: 0.28rem;
+          width: clamp(3.1rem, 12vw, 3.85rem);
         }
 
         .contact-shot {
@@ -2533,6 +2768,13 @@
           <span class="shatter-fragment" data-dx="18" data-dy="34" data-rot="-15" data-delay="0.36" style="--col: 2; --row: 2; --origin: 42% 16%; --hit-x: 44%; --hit-y: 18%; --cut: polygon(10% 0, 100% 10%, 100% 100%, 0 84%);"></span>
           <span class="shatter-fragment" data-dx="42" data-dy="27" data-rot="18" data-delay="0.42" style="--col: 3; --row: 2; --origin: 20% 14%; --hit-x: 26%; --hit-y: 18%; --cut: polygon(0 12%, 100% 0, 100% 100%, 14% 82%);"></span>
         </div>
+        <div id="linksGuide" class="links-guide" aria-hidden="true">
+          <div class="links-guide__panel" role="dialog" aria-modal="false" aria-labelledby="linksGuideTitle" aria-describedby="linksGuideBody">
+            <h2 id="linksGuideTitle">The Video Gallery Opens</h2>
+            <p id="linksGuideBody">Tap a floating window to enter the film.</p>
+            <button id="linksGuideButton" class="links-guide__button" type="button">OK</button>
+          </div>
+        </div>
         <div class="links-hint" aria-hidden="true">Click a window to watch the video</div>
         <span class="break-orb" data-start-x="-10" data-start-y="20" data-end-x="26" data-end-y="34" data-delay="0.02" data-trail="-8"></span>
         <span class="break-orb" data-start-x="112" data-start-y="22" data-end-x="63" data-end-y="43" data-delay="0.18" data-trail="188"></span>
@@ -2567,6 +2809,7 @@
             <p class="game-build-note">This site is still under construction. More works, worlds, and experiments will be uploaded soon.</p>
           </div>
         </div>
+        <button id="gameSkipToContactButton" class="game-skip-to-contact-button" type="button" aria-label="Continue to the final page"></button>
       </section>
 
       <section id="contactShot" class="contact-shot" aria-hidden="true" inert aria-label="Hayotzer work in progress and contact" lang="en">
@@ -2885,6 +3128,7 @@
         const breakOrbs = document.querySelectorAll(".break-orb");
         const breakFlash = document.querySelector(".break-flash");
         const gameShot = document.getElementById("gameShot");
+        const gameSkipToContactButton = document.getElementById("gameSkipToContactButton");
         const gameCanvas = document.getElementById("spellGameCanvas");
         const gameContext = gameCanvas.getContext("2d");
         const gameButtons = document.querySelectorAll("[data-game-action]");
@@ -2903,6 +3147,8 @@
         const sceneBody = document.getElementById("sceneBody");
         const skipToGameButton = document.getElementById("skipToGameButton");
         const linksSkipToGameButton = document.getElementById("linksSkipToGameButton");
+        const linksGuide = document.getElementById("linksGuide");
+        const linksGuideButton = document.getElementById("linksGuideButton");
         const loader = document.getElementById("loader");
         const loaderText = document.getElementById("loaderText");
         const loaderBar = document.getElementById("loaderBar");
@@ -3003,6 +3249,10 @@
         let galleryAutoAdvanceTimer = 0;
         let galleryAutoAdvanceTriggered = false;
         let galleryAdvanceInProgress = false;
+        let linksGuideShown = false;
+        let linksGuideTimer = 0;
+        let gameAdvanceToContactTimer = 0;
+        let gameAdvanceToContactInProgress = false;
         let shotFourStarted = false;
         let shotBreakStarted = false;
         let shotFiveStarted = false;
@@ -3811,6 +4061,25 @@
           lastModalFocus = null;
         };
 
+        const dismissLinksGuide = () => {
+          window.clearTimeout(linksGuideTimer);
+          linksGuideTimer = 0;
+          linksGuide.classList.remove("is-visible");
+          linksGuide.setAttribute("aria-hidden", "true");
+        };
+
+        const showLinksGuide = () => {
+          if (linksGuideShown || videoModal.classList.contains("is-open")) {
+            return;
+          }
+
+          linksGuideShown = true;
+          linksGuide.classList.add("is-visible");
+          linksGuide.setAttribute("aria-hidden", "false");
+          triggerMagicBurst(constrainedDevice ? 0.24 : 0.4);
+          linksGuideTimer = window.setTimeout(dismissLinksGuide, 3800);
+        };
+
         let shotThreeWebGLRaf = 0;
         const tickShotThreeWebGL = () => {
           if (!shotThreeStarted) {
@@ -3906,6 +4175,7 @@
           
           sampleDepthForHotspots();
           triggerMagicBurst(1.2);
+          showLinksGuide();
 
           window.setTimeout(() => {
             const maxPan = getLinksMaxPan();
@@ -3920,6 +4190,7 @@
           }
 
           shotThreeStarted = false;
+          dismissLinksGuide();
           delete document.body.dataset.shotThree;
           linksShot.setAttribute("aria-hidden", "true");
           linksShot.inert = true;
@@ -4184,6 +4455,9 @@
         };
 
         const resetGame = (level = 1) => {
+          window.clearTimeout(gameAdvanceToContactTimer);
+          gameAdvanceToContactTimer = 0;
+          gameAdvanceToContactInProgress = false;
           gameState.mode = "menu";
           gameState.score = 0;
           gameState.lives = 3;
@@ -4333,8 +4607,10 @@
 
           const aliveEnemies = gameState.enemies.filter((enemy) => enemy.alive);
           if (aliveEnemies.length === 0) {
+            gameState.score = 1496;
             gameState.mode = "won";
             addGameSpark(gameState.player.x, gameState.player.y - 86, "#f7c873", 34);
+            scheduleGameCompletionAdvance();
             return;
           }
 
@@ -4584,14 +4860,17 @@
                 ? "THE GATE FELL"
                 : "WANDSTORM";
             const subtitle = gameState.mode === "won"
-              ? "CAST AGAIN FOR A HIGHER WAVE"
+              ? "THE FINAL PAGE OPENS"
               : gameState.mode === "lost"
                 ? "CAST AGAIN TO REWRITE IT"
                 : "CAST TO BEGIN";
+            const controlsLine = gameState.mode === "won"
+              ? "OPENING THE NEXT PORTAL"
+              : "ARROWS / A D / TOUCH";
 
             drawGameText(title, GAME_WIDTH / 2, 490, 42, "#f7c873");
             drawGameText(subtitle, GAME_WIDTH / 2, 548, 21, "#67f8ff");
-            drawGameText("ARROWS / A D / TOUCH", GAME_WIDTH / 2, 596, 14, "rgba(248,242,255,0.78)");
+            drawGameText(controlsLine, GAME_WIDTH / 2, 596, 14, "rgba(248,242,255,0.78)");
           }
         };
 
@@ -4644,6 +4923,8 @@
           }
 
           shotFourStarted = false;
+          window.clearTimeout(gameAdvanceToContactTimer);
+          gameAdvanceToContactTimer = 0;
           delete document.body.dataset.shotFour;
           gameShot.setAttribute("aria-hidden", "true");
           gameShot.inert = true;
@@ -4804,7 +5085,7 @@
         };
 
         const beginPanDrag = (event) => {
-          if (!shotThreeStarted || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button")) {
+          if (!shotThreeStarted || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button, .links-guide")) {
             return;
           }
 
@@ -4832,7 +5113,7 @@
         };
 
         const beginPanTouch = (event) => {
-          if (!shotThreeStarted || event.touches.length !== 1 || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button")) {
+          if (!shotThreeStarted || event.touches.length !== 1 || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button, .links-guide")) {
             return;
           }
 
@@ -4873,7 +5154,7 @@
             return true;
           }
 
-          return Boolean(target.closest("iframe, input, textarea, select, [contenteditable], .video-modal, .game-stage, .game-button, .links-pan-button, .links-skip-to-game-button, .skip-to-game-button"));
+          return Boolean(target.closest("iframe, input, textarea, select, [contenteditable], .video-modal, .game-stage, .game-button, .links-pan-button, .links-skip-to-game-button, .game-skip-to-contact-button, .skip-to-game-button, .links-guide"));
         };
 
         const beginControlledTouchScroll = (event) => {
@@ -5054,6 +5335,40 @@
             galleryAutoAdvanceTriggered = true;
             advanceGalleryToEntrance();
           }, constrainedDevice ? 1100 : 900);
+        };
+
+        const advanceGameToContact = async () => {
+          if (gameAdvanceToContactInProgress) {
+            return;
+          }
+
+          window.clearTimeout(gameAdvanceToContactTimer);
+          gameAdvanceToContactTimer = 0;
+          gameAdvanceToContactInProgress = true;
+          gameSkipToContactButton.disabled = true;
+          triggerMagicBurst(constrainedDevice ? 0.28 : 0.46);
+
+          try {
+            await animateScrollToProgress(scrollStops.contactStart + 0.002, constrainedDevice ? 900 : 1120);
+          } finally {
+            gameAdvanceToContactInProgress = false;
+            gameSkipToContactButton.disabled = false;
+          }
+        };
+
+        const scheduleGameCompletionAdvance = () => {
+          if (gameAdvanceToContactTimer || gameAdvanceToContactInProgress) {
+            return;
+          }
+
+          gameAdvanceToContactTimer = window.setTimeout(() => {
+            gameAdvanceToContactTimer = 0;
+            if (!shotFourStarted || videoModal.classList.contains("is-open")) {
+              return;
+            }
+
+            advanceGameToContact();
+          }, 1200);
         };
 
         const linksAdvanceToGame = async () => {
@@ -5258,7 +5573,9 @@
         window.addEventListener("touchend", endControlledTouchScroll, { passive: true });
         window.addEventListener("touchcancel", endControlledTouchScroll, { passive: true });
         skipToGameButton.addEventListener("click", advanceGalleryToEntrance);
+        linksGuideButton.addEventListener("click", dismissLinksGuide);
         linksSkipToGameButton.addEventListener("click", linksAdvanceToGame);
+        gameSkipToContactButton.addEventListener("click", advanceGameToContact);
 
         linksShot.addEventListener("pointermove", (event) => {
           updateDepthParallax(event);
