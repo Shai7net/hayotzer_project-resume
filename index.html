@@ -1543,12 +1543,7 @@
       }
 
       .game-kicker {
-        margin: 0 0 0.55rem;
-        color: var(--gold);
-        font-size: 0.86rem;
-        font-weight: 900;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        display: none;
       }
 
       .game-copy h2 {
@@ -1737,12 +1732,7 @@
       }
 
       .contact-kicker {
-        margin: 0 0 0.7rem;
-        color: var(--gold);
-        font-size: 0.82rem;
-        font-weight: 900;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
+        display: none;
       }
 
       .contact-copy h2 {
@@ -1992,6 +1982,11 @@
         gap: 0.8rem;
       }
 
+      .loader__mode,
+      .loader__status {
+        display: none;
+      }
+
       .loader__eyebrow,
       .loader__mode,
       .loader__file,
@@ -2054,7 +2049,7 @@
       }
 
       .loader__status {
-        display: flex;
+        display: none;
         flex-wrap: wrap;
         gap: 0.7rem 1rem;
         align-items: center;
@@ -2494,7 +2489,7 @@
         <p id="sceneLead" class="lead">A cinematic portfolio of AI-born worlds.</p>
         <p id="sceneBody" class="scene-body" aria-live="polite"></p>
         <div class="scroll-note">Scroll gently</div>
-        <button id="skipToGameButton" class="skip-to-game-button" type="button" aria-label="Skip to the game entrance"></button>
+        <button id="skipToGameButton" class="skip-to-game-button" type="button" aria-label="Continue to the entrance animation"></button>
       </section>
 
       <div class="enter-copy" aria-hidden="true">
@@ -2552,7 +2547,7 @@
       <section id="gameShot" class="game-shot" aria-hidden="true" inert aria-label="Hayotzer spell arcade game">
         <div class="game-shell">
           <div class="game-copy">
-            <div class="game-kicker" lang="he" dir="rtl">קוד פתוח / Shot 04</div>
+            <div class="game-kicker" aria-hidden="true"></div>
             <h2>Hayotzer: Wandstorm</h2>
             <p>An open-source arcade experiment by Hayotzer, built from knowledge in software development, open-source tools, and browser games. Clear the living letters before the spell reaches the gate.</p>
           </div>
@@ -2577,7 +2572,7 @@
       <section id="contactShot" class="contact-shot" aria-hidden="true" inert aria-label="Hayotzer work in progress and contact" lang="en">
         <div class="contact-shell">
           <div class="contact-copy">
-            <div class="contact-kicker">Shot 05</div>
+            <div class="contact-kicker" aria-hidden="true"></div>
             <h2>The Book Is Still Writing Itself</h2>
             <p>
               This site is still under construction. More works, AI worlds, videos, and interactive rooms will be uploaded soon.
@@ -2612,14 +2607,14 @@
           <i class="loader__ring"></i>
         </div>
         <div class="loader__copy">
-          <div id="loaderMode" class="loader__mode">Measuring device memory</div>
+          <div id="loaderMode" class="loader__mode" aria-hidden="true"></div>
           <div class="loader__eyebrow">Opening the book</div>
           <strong class="loader__title">Hayotzer is assembling the world</strong>
-          <div id="loaderText" class="loader__text">Preparing the first spell...</div>
+          <div id="loaderText" class="loader__text">Loading...</div>
           <div class="loader__meter" aria-hidden="true"><span id="loaderBar"></span></div>
-          <div class="loader__status">
+          <div class="loader__status" aria-hidden="true">
             <span id="loaderPercent" class="loader__percent">0%</span>
-            <span id="loaderFile" class="loader__file">boot manifest</span>
+            <span id="loaderFile" class="loader__file"></span>
           </div>
           <button id="loaderRetry" class="loader__retry" type="button" hidden>Retry loading</button>
         </div>
@@ -3005,6 +3000,9 @@
         let controlledTouchTarget = 0;
         let controlledTouchRaf = 0;
         let autoAdvanceRaf = 0;
+        let galleryAutoAdvanceTimer = 0;
+        let galleryAutoAdvanceTriggered = false;
+        let galleryAdvanceInProgress = false;
         let shotFourStarted = false;
         let shotBreakStarted = false;
         let shotFiveStarted = false;
@@ -3024,6 +3022,7 @@
           gameStart: 0.82,
           contactStart: 0.92
         };
+        const GALLERY_AUTO_FRAME = TEXT_PANELS.find((panel) => panel.kind === "gallery")?.untilFrame ?? 52;
         const GAME_WIDTH = 540;
         const GAME_HEIGHT = 960;
         const HAYOTZER_WORD = "היוצר";
@@ -3072,7 +3071,7 @@
             loader.classList.add("is-hidden");
           }
         };
-        const setBootProgress = (value, label = "", file = "") => {
+        const setBootProgress = (value) => {
           bootProgress = clamp(value);
           setCss("--boot-progress", bootProgress.toFixed(4));
           setCss("--boot-hue", (190 + bootProgress * 170).toFixed(1));
@@ -3082,17 +3081,14 @@
           if (loaderBar) {
             loaderBar.style.width = `${(bootProgress * 100).toFixed(2)}%`;
           }
-          if (label && loaderText) {
-            loaderText.textContent = label;
-          }
-          if (file && loaderFile) {
-            loaderFile.textContent = file;
+          if (loaderText && document.body.dataset.bootState !== "error") {
+            loaderText.textContent = "Loading...";
           }
         };
-        const showLoadError = (message = "Media files were not found. Make sure the assets folder was uploaded together with index.html") => {
+        const showLoadError = () => {
           document.body.dataset.bootState = "error";
           loader.classList.remove("is-hidden");
-          loaderText.textContent = message;
+          loaderText.textContent = "Something did not load. Please retry.";
           if (loaderRetry) {
             loaderRetry.hidden = false;
           }
@@ -3305,7 +3301,7 @@
               return record;
             } catch (error) {
               lastError = error;
-              loaderText.textContent = `Retrying ${normalizeAssetKey(asset.url)} (${attempt}/3)`;
+              loaderText.textContent = "Loading...";
               await new Promise((resolve) => window.setTimeout(resolve, 220 * attempt));
             }
           }
@@ -3401,9 +3397,12 @@
             loaderRetry.hidden = true;
           }
           if (loaderMode) {
-            loaderMode.textContent = deviceProfile.label;
+            loaderMode.textContent = "";
           }
-          setBootProgress(0, "Preparing the first spell...", "boot manifest");
+          if (loaderFile) {
+            loaderFile.textContent = "";
+          }
+          setBootProgress(0);
 
           const assets = buildBootManifest();
           bootAssetTotal = assets.length;
@@ -4884,6 +4883,9 @@
             return;
           }
 
+          window.clearTimeout(galleryAutoAdvanceTimer);
+          galleryAutoAdvanceTimer = 0;
+
           const touch = event.touches[0];
           controlledTouchActive = true;
           controlledTouchStartX = touch.clientX;
@@ -4954,12 +4956,20 @@
         const endControlledTouchScroll = () => {
           controlledTouchActive = false;
           controlledTouchMode = "";
+          requestUpdate();
         };
 
         const cancelAutoAdvance = () => {
           if (autoAdvanceRaf) {
             window.cancelAnimationFrame(autoAdvanceRaf);
             autoAdvanceRaf = 0;
+          }
+        };
+
+        const cancelGalleryAutoAdvanceTimer = () => {
+          if (galleryAutoAdvanceTimer) {
+            window.clearTimeout(galleryAutoAdvanceTimer);
+            galleryAutoAdvanceTimer = 0;
           }
         };
 
@@ -4995,21 +5005,55 @@
           autoAdvanceRaf = window.requestAnimationFrame(step);
         });
 
-        const autoAdvanceToGame = async () => {
-          if (skipToGameButton.disabled) {
+        const advanceGalleryToEntrance = async () => {
+          if (galleryAdvanceInProgress || skipToGameButton.disabled) {
             return;
           }
 
+          cancelGalleryAutoAdvanceTimer();
+          galleryAdvanceInProgress = true;
+          galleryAutoAdvanceTriggered = true;
           skipToGameButton.disabled = true;
-          warmShotThreeAssets();
-          triggerMagicBurst(constrainedDevice ? 0.3 : 0.55);
+          triggerMagicBurst(constrainedDevice ? 0.36 : 0.58);
 
           try {
-            await animateScrollToProgress(scrollStops.breakStart, constrainedDevice ? 520 : 680);
-            await animateScrollToProgress(scrollStops.gameStart + 0.002, constrainedDevice ? 840 : 1040);
+            await animateScrollToProgress(scrollStops.shotOneEnd + 0.001, constrainedDevice ? 2500 : 2100);
           } finally {
+            galleryAdvanceInProgress = false;
             skipToGameButton.disabled = false;
           }
+        };
+
+        const syncGalleryAutoAdvance = (frameIndex, pageProgress, inVideoOrLater) => {
+          const shouldAutoAdvance = !galleryAutoAdvanceTriggered
+            && !galleryAdvanceInProgress
+            && !controlledTouchActive
+            && !inVideoOrLater
+            && pageProgress < scrollStops.shotOneEnd
+            && frameIndex >= GALLERY_AUTO_FRAME
+            && !videoModal.classList.contains("is-open");
+
+          if (!shouldAutoAdvance) {
+            cancelGalleryAutoAdvanceTimer();
+            return;
+          }
+
+          if (galleryAutoAdvanceTimer) {
+            return;
+          }
+
+          galleryAutoAdvanceTimer = window.setTimeout(() => {
+            galleryAutoAdvanceTimer = 0;
+
+            const progressNow = clamp(window.scrollY / getMaxScroll());
+            const frameNow = Math.round(clamp(progressNow / scrollStops.shotOneEnd) * (FRAME_COUNT - 1));
+            if (progressNow >= scrollStops.shotOneEnd || frameNow < GALLERY_AUTO_FRAME || videoModal.classList.contains("is-open")) {
+              return;
+            }
+
+            galleryAutoAdvanceTriggered = true;
+            advanceGalleryToEntrance();
+          }, constrainedDevice ? 1100 : 900);
         };
 
         const linksAdvanceToGame = async () => {
@@ -5169,6 +5213,7 @@
           ensureFrameWindow(frameIndex);
           drawFrame(frameIndex);
           updateSceneText(frameIndex);
+          syncGalleryAutoAdvance(frameIndex, pageProgress, inVideoOrLater);
         };
 
         const requestUpdate = () => {
@@ -5190,7 +5235,8 @@
 
         video.addEventListener("error", () => {
           loader.classList.remove("is-hidden");
-          loaderText.textContent = "The entrance video did not load. Make sure assets/shot-2/enter-book.mp4 was uploaded to Netlify";
+          document.body.dataset.bootState = "error";
+          loaderText.textContent = "Something did not load. Please retry.";
           console.error("Missing video: assets/shot-2/enter-book.mp4?v=20260524-wandstorm");
         });
 
@@ -5211,7 +5257,7 @@
         window.addEventListener("touchmove", moveControlledTouchScroll, { passive: false });
         window.addEventListener("touchend", endControlledTouchScroll, { passive: true });
         window.addEventListener("touchcancel", endControlledTouchScroll, { passive: true });
-        skipToGameButton.addEventListener("click", autoAdvanceToGame);
+        skipToGameButton.addEventListener("click", advanceGalleryToEntrance);
         linksSkipToGameButton.addEventListener("click", linksAdvanceToGame);
 
         linksShot.addEventListener("pointermove", (event) => {
