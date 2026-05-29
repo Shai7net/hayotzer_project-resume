@@ -9,6 +9,7 @@
     />
     <meta name="theme-color" content="#070711" />
     <meta name="color-scheme" content="dark" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta property="og:title" content="Hayotzer | Interactive AI Portfolio" />
     <meta
       property="og:description"
@@ -20,8 +21,10 @@
     <link rel="icon" href="assets/loader/hayotzer-loader-portal.png" type="image/png" />
     <link rel="preload" href="assets/loader/hayotzer-loader-portal.png" as="image" fetchpriority="high" />
     <link rel="preload" href="assets/shot-4-5/shot-4-5-continuity-20260524.jpg" as="image" />
-    <link rel="modulepreload" href="assets/vendor/three/three.module.js" />
-    <link rel="modulepreload" href="assets/vendor/three/examples/jsm/loaders/GLTFLoader.js" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260529-v3.js" as="script" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260529-v3.css" as="style" />
+    <link rel="preload" href="assets/shot-03-wand/Dmagic_wand_model.glb" as="fetch" crossorigin />
+    <link rel="preload" href="assets/shot-03-wand/wand-render-20260529.png" as="image" />
     <title>Hayotzer | Opening The Book</title>
     <style>
       :root {
@@ -69,7 +72,7 @@
         --links-scene-tilt-x: 0deg;
         --links-scene-tilt-y: 0deg;
         --links-orb-x: 50%;
-        --links-orb-y: 26%;
+        --links-orb-y: 34%;
         --depth-shift-x: 0px;
         --depth-shift-y: 0px;
         --game-opacity: 0;
@@ -938,6 +941,55 @@
         overflow: hidden;
       }
 
+      .links-world--react {
+        width: 100vw;
+        height: 100vh;
+        transform:
+          translate3d(-50%, -50%, 0)
+          perspective(1200px)
+          rotateX(var(--links-scene-tilt-x))
+          rotateY(var(--links-scene-tilt-y))
+          scale(var(--links-scale));
+        filter:
+          saturate(1)
+          contrast(1.04)
+          brightness(0.9)
+          blur(var(--links-blur));
+        background: #050300;
+        overflow: hidden;
+      }
+
+      .shot-three-react-host {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: auto;
+      }
+
+      .shot-three-static-wand {
+        position: absolute;
+        z-index: 3;
+        left: 50%;
+        top: 50%;
+        height: min(82vh, 48rem);
+        width: auto;
+        max-width: 34vw;
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.88;
+        transform: translate(-50%, -50%) translateY(min(34.5vh, 20.3rem)) rotate(-1.5deg);
+        transform-origin: 50% 50%;
+        filter:
+          drop-shadow(0 0 1.4rem rgba(255, 193, 90, 0.55))
+          drop-shadow(0 0 3.8rem rgba(255, 125, 38, 0.22));
+        transition: opacity 680ms ease, transform 900ms ease;
+      }
+
+      .links-world[data-webgl="ready"] .shot-three-static-wand {
+        opacity: 0;
+      }
+
       .links-brick-texture,
       .links-scene-vignette,
       .links-magic-orb,
@@ -964,6 +1016,12 @@
         height: 100%;
         opacity: 0;
         pointer-events: none;
+        filter:
+          saturate(1.22)
+          contrast(1.08)
+          brightness(1.18)
+          drop-shadow(0 0 1.4rem rgba(255, 189, 74, 0.3))
+          drop-shadow(0 0 3.8rem rgba(255, 91, 187, 0.13));
         transition: opacity 580ms ease;
       }
 
@@ -1002,19 +1060,21 @@
         inset: auto auto auto auto;
         left: var(--links-orb-x);
         top: var(--links-orb-y);
-        width: clamp(7rem, 14vw, 12rem);
+        width: clamp(2.9rem, 5.6vw, 4.8rem);
         aspect-ratio: 1;
         border-radius: 50%;
         pointer-events: none;
         transform: translate(-50%, -50%);
         background:
-          radial-gradient(circle, #fff 0 8%, rgba(255, 247, 188, 0.95) 12%, rgba(247, 200, 115, 0.72) 26%, rgba(255, 91, 187, 0.28) 48%, transparent 72%);
+          radial-gradient(circle, #fff 0 10%, rgba(255, 248, 191, 0.96) 12% 22%, rgba(255, 189, 74, 0.58) 32%, rgba(255, 117, 36, 0.16) 52%, transparent 70%);
         box-shadow:
-          0 0 2rem rgba(255, 255, 255, 0.72),
-          0 0 4.2rem rgba(247, 200, 115, 0.62),
-          0 0 7rem rgba(255, 91, 187, 0.34);
+          0 0 0.9rem rgba(255, 255, 255, 0.82),
+          0 0 2rem rgba(247, 200, 115, 0.72),
+          0 0 4.6rem rgba(255, 124, 36, 0.36),
+          0 0 7rem rgba(140, 72, 255, 0.14);
         mix-blend-mode: screen;
-        animation: linksOrbPulse 2.7s ease-in-out infinite;
+        filter: saturate(1.18);
+        animation: linksOrbPulse 2.35s ease-in-out infinite;
       }
 
       .links-carousel-shell {
@@ -1024,7 +1084,7 @@
         perspective: 1200px;
         pointer-events: none;
         transform:
-          translate3d(0, 0, 0)
+          translate3d(0, -12vh, 0)
           rotateX(calc(var(--links-scene-tilt-x) * -0.34))
           rotateY(calc(var(--links-scene-tilt-y) * -0.44));
         transform-style: preserve-3d;
@@ -1527,7 +1587,7 @@
       }
 
       .links-carousel .video-hotspot {
-        --card-depth: min(42vw, 36rem);
+        --card-depth: min(34vw, 31rem);
         left: 50%;
         top: 50%;
         width: clamp(13rem, 25vw, 23rem);
@@ -1551,10 +1611,12 @@
           translate(-50%, -50%)
           rotateY(var(--card-angle))
           translateZ(var(--card-depth))
+          rotateY(calc(-1 * (var(--card-angle) + var(--links-carousel-rotation))))
           rotateX(var(--card-tilt, 0deg))
           scale(1);
         animation: videoFloat 6.8s ease-in-out infinite;
         transform-style: preserve-3d;
+        backface-visibility: hidden;
         pointer-events: auto;
       }
 
@@ -1625,6 +1687,7 @@
           translate(-50%, -50%)
           rotateY(var(--card-angle))
           translateZ(calc(var(--card-depth) + 1.4rem))
+          rotateY(calc(-1 * (var(--card-angle) + var(--links-carousel-rotation))))
           rotateX(var(--card-tilt, 0deg))
           scale(1.055);
       }
@@ -1917,6 +1980,12 @@
         }
       }
 
+      @keyframes spinLoader {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
       @supports not (translate: 0 0) {
         .video-hotspot {
           animation: none;
@@ -1980,6 +2049,86 @@
         width: 100%;
         height: 100%;
         border: 0;
+      }
+
+      .video-modal__state {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        text-align: center;
+        color: rgba(255, 246, 212, 0.92);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(247, 200, 115, 0.2), transparent 11rem),
+          linear-gradient(135deg, rgba(7, 5, 18, 0.62), rgba(0, 0, 0, 0.78));
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 280ms ease;
+      }
+
+      .video-modal__state.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .video-modal__state-inner {
+        display: grid;
+        justify-items: center;
+        gap: 0.75rem;
+      }
+
+      .video-modal__spinner {
+        width: 3.1rem;
+        height: 3.1rem;
+        border: 2px solid rgba(255, 255, 255, 0.14);
+        border-top-color: rgba(247, 200, 115, 0.96);
+        border-radius: 50%;
+        box-shadow: 0 0 1.6rem rgba(247, 200, 115, 0.35);
+        animation: spinLoader 920ms linear infinite;
+      }
+
+      .video-modal__state.is-ready {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .video-modal__state.is-ready .video-modal__spinner,
+      .video-modal__state.is-action .video-modal__spinner {
+        display: none;
+      }
+
+      .video-modal__state p {
+        margin: 0;
+        max-width: 24rem;
+        font-size: clamp(0.9rem, 2vw, 1.08rem);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-shadow: 0 0 1rem rgba(247, 200, 115, 0.32);
+      }
+
+      .video-modal__play {
+        min-height: 2.65rem;
+        padding: 0.72rem 1.15rem;
+        border: 1px solid rgba(247, 200, 115, 0.58);
+        border-radius: 999px;
+        color: rgba(20, 12, 3, 0.96);
+        background:
+          radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.88), transparent 34%),
+          linear-gradient(135deg, #fff2b1, #ffb42e 58%, #ff6b21);
+        box-shadow:
+          0 0 1.4rem rgba(247, 200, 115, 0.42),
+          0 0.7rem 1.6rem rgba(0, 0, 0, 0.36);
+        font-weight: 950;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .video-modal__play[hidden] {
+        display: none;
       }
 
       .video-modal__meta {
@@ -2900,7 +3049,7 @@
         }
 
         .links-carousel .video-hotspot {
-          --card-depth: min(72vw, 19rem);
+          --card-depth: min(56vw, 16rem);
           width: clamp(9.6rem, 54vw, 14rem);
           height: clamp(5.5rem, 30vw, 8rem);
           border-radius: 0.82rem;
@@ -2921,8 +3070,21 @@
         }
 
         .links-magic-orb {
-          top: 23%;
-          width: clamp(5.4rem, 26vw, 8rem);
+          top: 32%;
+          width: clamp(2.4rem, 12vw, 3.9rem);
+        }
+
+        .shot-three-static-wand {
+          height: min(70svh, 35rem);
+          max-width: 54vw;
+          transform: translate(-50%, -50%) translateY(min(29.5svh, 14.8rem)) rotate(-1.5deg);
+        }
+
+        .links-carousel-shell {
+          transform:
+            translate3d(0, -9vh, 0)
+            rotateX(calc(var(--links-scene-tilt-x) * -0.28))
+            rotateY(calc(var(--links-scene-tilt-y) * -0.36));
         }
 
         .break-orb {
@@ -3130,15 +3292,9 @@
       </div>
 
       <section id="linksShot" class="links-shot" aria-hidden="true" inert aria-label="Interactive YouTube links gallery">
-        <div class="links-world links-world--native" data-webgl="fallback">
-          <div class="links-brick-texture" aria-hidden="true"></div>
-          <canvas id="shotThreeWandCanvas" class="links-wand-canvas" aria-hidden="true"></canvas>
-          <div id="linksWandFallback" class="links-wand-fallback" aria-hidden="true"></div>
-          <div class="links-magic-orb" aria-hidden="true"></div>
-          <div class="links-carousel-shell" aria-label="Floating video windows">
-            <div id="linksCarousel" class="links-carousel"></div>
-          </div>
-          <div class="links-scene-vignette" aria-hidden="true"></div>
+        <div class="links-world links-world--react" data-webgl="fallback">
+          <img class="shot-three-static-wand" src="assets/shot-03-wand/wand-render-20260529.png" alt="" aria-hidden="true" />
+          <div id="shotThreeReactHost" class="shot-three-react-host" aria-label="Floating magic wand video gallery"></div>
         </div>
         <div class="links-shatter-layer" aria-hidden="true">
           <span class="shatter-fragment" data-dx="-38" data-dy="-20" data-rot="-13" data-delay="0.03" style="--col: 0; --row: 0; --origin: 70% 62%; --hit-x: 68%; --hit-y: 70%; --cut: polygon(0 0, 100% 0, 88% 100%, 0 82%);"></span>
@@ -3256,11 +3412,18 @@
           <iframe
             id="videoFrame"
             title="YouTube video player"
-            loading="lazy"
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            loading="eager"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
           ></iframe>
+          <div id="videoModalState" class="video-modal__state" aria-live="polite">
+            <div class="video-modal__state-inner">
+              <span class="video-modal__spinner" aria-hidden="true"></span>
+              <p id="videoModalStateText">Loading video...</p>
+              <button id="videoModalPlayButton" class="video-modal__play" type="button" hidden>Play inside this window</button>
+            </div>
+          </div>
         </div>
         <div class="video-modal__meta">
           <p id="videoModalTitle">Selected work</p>
@@ -3506,6 +3669,7 @@
         const introCopy = document.querySelector(".intro-copy");
         const linksShot = document.getElementById("linksShot");
         const linksWorld = document.querySelector(".links-world");
+        const shotThreeReactHost = document.getElementById("shotThreeReactHost");
         const linksCarousel = document.getElementById("linksCarousel");
         const shotThreeWandCanvas = document.getElementById("shotThreeWandCanvas");
         const linksWandFallback = document.getElementById("linksWandFallback");
@@ -3527,7 +3691,14 @@
         const videoModalClose = document.getElementById("videoModalClose");
         const videoModalTitle = document.getElementById("videoModalTitle");
         const videoExternalLink = document.getElementById("videoExternalLink");
-        const SHOT_THREE_WAND_MODEL = "assets/shot-3/wand/Dmagic-wand-20260528.glb";
+        const videoModalState = document.getElementById("videoModalState");
+        const videoModalStateText = document.getElementById("videoModalStateText");
+        const videoModalPlayButton = document.getElementById("videoModalPlayButton");
+        const SHOT_THREE_REACT_SCRIPT = "assets/shot-03-wand/shot3-react-20260529-v3.js";
+        const SHOT_THREE_REACT_STYLE = "assets/shot-03-wand/shot3-react-20260529-v3.css";
+        const SHOT_THREE_REACT_MODEL = "assets/shot-03-wand/Dmagic_wand_model.glb";
+        const SHOT_THREE_WAND_RENDER = "assets/shot-03-wand/wand-render-20260529.png";
+        const SHOT_THREE_WAND_MODEL = "assets/shot-3/wand/hayotzer-shot3-wand-20260528.glb";
         const SHOT_THREE_THREE_MODULE = "./assets/vendor/three/three.module.js";
         const SHOT_THREE_GLTF_LOADER = "./assets/vendor/three/examples/jsm/loaders/GLTFLoader.js";
         const LINKS_SKIP_ARROW_ASSET = "assets/shot-3/links-skip-arrow-20260525.webp";
@@ -3636,7 +3807,14 @@
         let shotThreeCamera = null;
         let shotThreeWand = null;
         let shotThreeCarouselRotation = 0;
+        let shotThreeRotationTotal = 0;
+        let shotThreeNextSwapCycle = 3;
+        let shotThreeVisibleVideos = [];
         let shotThreeLastTime = 0;
+        let shotThreeReactScriptPromise = null;
+        let shotThreeReactShadow = null;
+        let shotThreeReactMount = null;
+        let shotThreeReactMounted = false;
         let shotTwoFallbackTimer = 0;
         let panDragActive = false;
         let panDragStartX = 0;
@@ -3669,6 +3847,13 @@
         let shotBreakStarted = false;
         let shotFiveStarted = false;
         let lastModalFocus = null;
+        let videoModalLoadToken = 0;
+        let videoModalLoadTimer = 0;
+        let videoModalActionTimer = 0;
+        let activeVideoEmbedUrls = [];
+        let activeVideoEmbedIndex = 0;
+        let activeVideoExternalUrl = "";
+        let activeVideoExternalOnly = false;
         let gamePointerActive = false;
         let loadErrors = 0;
         let magicRatio = 1;
@@ -3709,42 +3894,97 @@
           enemyStepTimer: 0,
           gameLoopStarted: false
         };
-        const SHOT_THREE_VIDEOS = [
+        const SHOT_THREE_VIDEO_POOL = [
           {
             id: "7NoQThZ3UuI",
             title: "Through the Other Side of the Head",
             url: "https://www.youtube.com/watch?v=7NoQThZ3UuI",
+            channel: "@shaitt1137",
             accent: 282
           },
           {
             id: "gWo-eveJRMY",
             title: "Cinematic Characters",
             url: "https://www.youtube.com/watch?v=gWo-eveJRMY",
+            channel: "@shaitt1137",
             accent: 326
           },
           {
             id: "qGd-axzPo8w",
             title: "AI Worlds Gallery",
             url: "https://www.youtube.com/watch?v=qGd-axzPo8w",
+            channel: "@shaitt1137",
             accent: 214
           },
           {
             id: "YjyU59Xr9qU",
             title: "Magic & Motion",
             url: "https://www.youtube.com/watch?v=YjyU59Xr9qU",
+            channel: "@shaitt1137",
             accent: 18
           },
           {
             id: "dn7hREv-MVs",
             title: "Wandstorm Game Teaser",
             url: "https://www.youtube.com/watch?v=dn7hREv-MVs",
+            channel: "@the88creator",
             accent: 190
           },
           {
             id: "r8hgc_9hFag",
             title: "Portal Vision",
             url: "https://www.youtube.com/watch?v=r8hgc_9hFag",
+            channel: "@the88creator",
             accent: 38
+          },
+          {
+            id: "wQfYq-X_nWo",
+            title: "Hayotzer Color Gate",
+            url: "https://www.youtube.com/watch?v=wQfYq-X_nWo&t=2s",
+            channel: "@shaitt1137",
+            accent: 304
+          },
+          {
+            id: "r3VTSucVRgY",
+            title: "Guitar Dream Character",
+            url: "https://www.youtube.com/watch?v=r3VTSucVRgY",
+            channel: "@shaitt1137",
+            accent: 246
+          },
+          {
+            id: "6plwN1a1ko",
+            title: "Mini Portal Fragment",
+            url: "https://www.youtube.com/watch?v=6plwN1a1ko",
+            channel: "@the88creator",
+            accent: 276
+          },
+          {
+            id: "8OSAIXFcnJw",
+            title: "AI Cinematic Window",
+            url: "https://www.youtube.com/watch?v=8OSAIXFcnJw&t=17s",
+            channel: "@the88creator",
+            accent: 204
+          },
+          {
+            id: "PI8aqONgYk",
+            title: "Open Spaces",
+            url: "https://www.youtube.com/watch?v=PI8aqONgYk",
+            channel: "@the88creator",
+            accent: 336
+          },
+          {
+            id: "sedd2J_a4Wg",
+            title: "Book Room Vision",
+            url: "https://www.youtube.com/watch?v=sedd2J_a4Wg&t=11s",
+            channel: "@the88creator",
+            accent: 34
+          },
+          {
+            id: "K1NqrB9rbc4",
+            title: "Short Spell",
+            url: "https://www.youtube.com/shorts/K1NqrB9rbc4",
+            channel: "@shaitt1137",
+            accent: 168
           }
         ];
 
@@ -3835,22 +4075,29 @@
               label: "Loading the entrance video"
             },
             {
-              key: SHOT_THREE_WAND_MODEL,
-              url: SHOT_THREE_WAND_MODEL,
+              key: SHOT_THREE_REACT_SCRIPT,
+              url: SHOT_THREE_REACT_SCRIPT,
+              kind: "document",
+              label: "Preparing the video gallery"
+            },
+            {
+              key: SHOT_THREE_REACT_STYLE,
+              url: SHOT_THREE_REACT_STYLE,
+              kind: "document",
+              label: "Preparing the video gallery light"
+            },
+            {
+              key: SHOT_THREE_REACT_MODEL,
+              url: SHOT_THREE_REACT_MODEL,
               kind: "model",
               label: "Preparing the video gallery wand"
             },
             {
-              key: "assets/vendor/three/three.module.js",
-              url: "assets/vendor/three/three.module.js",
-              kind: "document",
-              label: "Preparing the 3D runtime"
-            },
-            {
-              key: "assets/vendor/three/examples/jsm/loaders/GLTFLoader.js",
-              url: "assets/vendor/three/examples/jsm/loaders/GLTFLoader.js",
-              kind: "document",
-              label: "Preparing the wand loader"
+              key: SHOT_THREE_WAND_RENDER,
+              url: SHOT_THREE_WAND_RENDER,
+              kind: "image",
+              decode: true,
+              label: "Preparing the video gallery wand render"
             },
             {
               key: LINKS_SKIP_ARROW_ASSET,
@@ -4469,40 +4716,168 @@
           return hours * 3600 + minutes * 60 + seconds;
         };
 
-        const youtubeEmbedUrl = (url) => {
-          const parsed = new URL(url);
-          const videoId = parsed.pathname.startsWith("/shorts/")
-            ? parsed.pathname.split("/").filter(Boolean)[1]
-            : parsed.searchParams.get("v");
+        const youtubeVideoIdFromUrl = (url) => {
+          let parsed;
+          try {
+            parsed = new URL(url, window.location.href);
+          } catch (error) {
+            return "";
+          }
+
+          const host = parsed.hostname.replace(/^www\./, "");
+          const pathParts = parsed.pathname.split("/").filter(Boolean);
+
+          if (host === "youtu.be") {
+            return pathParts[0] || "";
+          }
+
+          if (pathParts[0] === "shorts" || pathParts[0] === "embed") {
+            return pathParts[1] || "";
+          }
+
+          return parsed.searchParams.get("v") || "";
+        };
+
+        const buildYoutubeEmbedUrl = (url, host = "www.youtube.com") => {
+          let parsed;
+          try {
+            parsed = new URL(url, window.location.href);
+          } catch (error) {
+            return "";
+          }
+
+          const videoId = youtubeVideoIdFromUrl(url);
           const start = secondsFromTimecode(parsed.searchParams.get("t") || parsed.searchParams.get("start"));
 
           if (!videoId) {
             return "";
           }
 
-          const embed = new URL(`https://www.youtube.com/embed/${videoId}`);
+          const embed = new URL(`https://${host}/embed/${videoId}`);
           embed.searchParams.set("autoplay", "1");
+          embed.searchParams.set("mute", "1");
+          embed.searchParams.set("controls", "1");
           embed.searchParams.set("playsinline", "1");
           embed.searchParams.set("rel", "0");
           embed.searchParams.set("modestbranding", "1");
+          embed.searchParams.set("iv_load_policy", "3");
+          embed.searchParams.set("enablejsapi", "1");
+          if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+            embed.searchParams.set("origin", window.location.origin);
+          }
           if (start > 0) {
             embed.searchParams.set("start", String(start));
           }
           return embed.toString();
         };
 
+        const youtubeEmbedUrls = (url) => {
+          const urls = [
+            buildYoutubeEmbedUrl(url, "www.youtube.com"),
+            buildYoutubeEmbedUrl(url, "www.youtube-nocookie.com")
+          ].filter(Boolean);
+          return [...new Set(urls)];
+        };
+
+        const youtubeEmbedUrl = (url) => youtubeEmbedUrls(url)[0] || "";
+
+        const clearVideoModalTimers = () => {
+          window.clearTimeout(videoModalLoadTimer);
+          window.clearTimeout(videoModalActionTimer);
+          videoModalLoadTimer = 0;
+          videoModalActionTimer = 0;
+        };
+
+        const setVideoModalState = (kind, text, buttonLabel = "Play inside this window") => {
+          if (!videoModalState || !videoModalStateText || !videoModalPlayButton) {
+            return;
+          }
+
+          videoModalState.classList.toggle("is-visible", kind !== "hidden");
+          videoModalState.classList.toggle("is-ready", kind === "ready" || kind === "hidden");
+          videoModalState.classList.toggle("is-action", kind === "action");
+          videoModalStateText.textContent = text || "";
+          videoModalPlayButton.textContent = buttonLabel;
+          videoModalPlayButton.hidden = kind !== "action";
+        };
+
+        const loadVideoEmbedAt = (index, token = videoModalLoadToken) => {
+          if (!activeVideoEmbedUrls.length || token !== videoModalLoadToken) {
+            return;
+          }
+
+          activeVideoEmbedIndex = Math.max(0, Math.min(activeVideoEmbedUrls.length - 1, index));
+          videoFrame.dataset.loaded = "false";
+          videoFrame.src = activeVideoEmbedUrls[activeVideoEmbedIndex];
+        };
+
         const openVideoModal = (url, title = "Selected work") => {
-          const embedUrl = youtubeEmbedUrl(url);
-          if (!embedUrl) {
+          activeVideoEmbedUrls = youtubeEmbedUrls(url);
+          activeVideoEmbedIndex = 0;
+          activeVideoExternalUrl = url;
+          activeVideoExternalOnly = window.location.protocol === "file:";
+          if (!activeVideoEmbedUrls.length) {
             return;
           }
 
           lastModalFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+          const loadToken = ++videoModalLoadToken;
+          clearVideoModalTimers();
+          setVideoModalState("loading", "Loading video...");
           videoModalTitle.textContent = title;
           videoExternalLink.href = url;
-          videoFrame.src = embedUrl;
+          videoFrame.removeAttribute("src");
+          videoFrame.dataset.loaded = "false";
           videoModal.classList.add("is-open");
           videoModal.setAttribute("aria-hidden", "false");
+
+          if (activeVideoExternalOnly) {
+            setVideoModalState(
+              "action",
+              "Video preview needs the site opened through a local server or the live website. Direct file opening can trigger YouTube error 153.",
+              "Open on YouTube"
+            );
+            try {
+              videoModalClose.focus({ preventScroll: true });
+            } catch (error) {
+              videoModalClose.focus();
+            }
+            return;
+          }
+
+          loadVideoEmbedAt(0, loadToken);
+
+          videoModalLoadTimer = window.setTimeout(() => {
+            if (
+              loadToken === videoModalLoadToken
+              && videoModal.classList.contains("is-open")
+              && videoFrame.dataset.loaded !== "true"
+              && activeVideoEmbedUrls.length > 1
+            ) {
+              setVideoModalState("loading", "Opening video player...");
+              loadVideoEmbedAt(1, loadToken);
+            }
+          }, 2600);
+
+          videoModalActionTimer = window.setTimeout(() => {
+            if (
+              loadToken === videoModalLoadToken
+              && videoModal.classList.contains("is-open")
+              && videoFrame.dataset.loaded !== "true"
+            ) {
+              setVideoModalState("action", "Tap to start the video in this window.");
+            }
+          }, 6200);
+
+          requestAnimationFrame(() => {
+            if (
+              loadToken === videoModalLoadToken
+              && videoModal.classList.contains("is-open")
+              && !videoFrame.getAttribute("src")
+            ) {
+              loadVideoEmbedAt(activeVideoEmbedIndex, loadToken);
+            }
+          });
           try {
             videoModalClose.focus({ preventScroll: true });
           } catch (error) {
@@ -4511,9 +4886,17 @@
         };
 
         const closeVideoModal = () => {
+          videoModalLoadToken += 1;
+          clearVideoModalTimers();
+          setVideoModalState("hidden", "");
+          activeVideoEmbedUrls = [];
+          activeVideoEmbedIndex = 0;
+          activeVideoExternalUrl = "";
+          activeVideoExternalOnly = false;
           videoModal.classList.remove("is-open");
           videoModal.setAttribute("aria-hidden", "true");
-          videoFrame.src = "";
+          videoFrame.removeAttribute("src");
+          videoFrame.dataset.loaded = "false";
           if (lastModalFocus && document.contains(lastModalFocus) && !linksShot.hasAttribute("inert")) {
             try {
               lastModalFocus.focus({ preventScroll: true });
@@ -4608,20 +4991,60 @@
           }
           linksRotateToggleButton.textContent = shotThreeRotationPaused ? "Resume Spin" : "Pause Spin";
           linksRotateToggleButton.setAttribute("aria-pressed", shotThreeRotationPaused ? "true" : "false");
+          if (shotThreeReactMounted && window.HayotzerShot3) {
+            if (shotThreeRotationPaused && typeof window.HayotzerShot3.stop === "function") {
+              window.HayotzerShot3.stop();
+            } else if (!shotThreeRotationPaused && typeof window.HayotzerShot3.start === "function") {
+              window.HayotzerShot3.start();
+            }
+          }
         };
 
         const videoWatchUrl = (id) => `https://www.youtube.com/watch?v=${id}`;
+        const escapeHtml = (value) => String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
 
-        const renderShotThreeCards = () => {
-          if (shotThreeCardsRendered || !linksCarousel) {
+        const chooseShotThreeVideos = () => {
+          const shuffled = [...SHOT_THREE_VIDEO_POOL]
+            .map((videoItem) => ({ videoItem, order: Math.random() }))
+            .sort((a, b) => a.order - b.order)
+            .map(({ videoItem }) => videoItem);
+          const targetCount = Math.min(shuffled.length, 5 + Math.round(Math.random()));
+          const picked = [];
+          const channels = ["@shaitt1137", "@the88creator"];
+
+          channels.forEach((channel) => {
+            const match = shuffled.find((videoItem) => videoItem.channel === channel && !picked.includes(videoItem));
+            if (match) {
+              picked.push(match);
+            }
+          });
+
+          shuffled.forEach((videoItem) => {
+            if (picked.length < targetCount && !picked.includes(videoItem)) {
+              picked.push(videoItem);
+            }
+          });
+
+          return picked.slice(0, targetCount);
+        };
+
+        const renderShotThreeCards = (force = false) => {
+          if ((shotThreeCardsRendered && !force) || !linksCarousel) {
             return;
           }
 
-          const total = SHOT_THREE_VIDEOS.length;
-          linksCarousel.innerHTML = SHOT_THREE_VIDEOS.map((videoItem, index) => {
+          clearActiveGalleryHotspot();
+          shotThreeVisibleVideos = chooseShotThreeVideos();
+          const total = shotThreeVisibleVideos.length;
+          linksCarousel.innerHTML = shotThreeVisibleVideos.map((videoItem, index) => {
             const angle = (360 / total) * index;
             const thumbnail = `https://i.ytimg.com/vi/${videoItem.id}/hqdefault.jpg`;
-            const title = videoItem.title.replace(/"/g, "&quot;");
+            const title = escapeHtml(videoItem.title);
+            const channel = escapeHtml(videoItem.channel);
             return `
               <button
                 class="video-hotspot"
@@ -4629,6 +5052,7 @@
                 data-youtube="${videoItem.url || videoWatchUrl(videoItem.id)}"
                 data-title="${title}"
                 data-accent="${videoItem.accent}"
+                data-channel="${channel}"
                 aria-label="Watch ${title}"
                 style="--card-angle: ${angle.toFixed(3)}deg; --hotspot-accent: ${videoItem.accent}; --hotspot-image: url('${thumbnail}'); --float-delay: ${(-index * 0.42).toFixed(2)}s;"
               >
@@ -4646,6 +5070,15 @@
             hotspot.addEventListener("pointerdown", () => setActiveGalleryHotspot(hotspot));
           });
           shotThreeCardsRendered = true;
+        };
+
+        const swapShotThreeCards = () => {
+          if (!shotThreeStarted || videoModal.classList.contains("is-open")) {
+            return;
+          }
+
+          renderShotThreeCards(true);
+          triggerMagicBurst(constrainedDevice ? 0.24 : 0.34);
         };
 
         const resizeShotThreeRenderer = () => {
@@ -4677,8 +5110,9 @@
             ]);
 
             shotThreeScene = new THREE.Scene();
-            shotThreeCamera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-            shotThreeCamera.position.set(0, 0.18, constrainedDevice ? 7.8 : 7);
+            shotThreeCamera = new THREE.PerspectiveCamera(constrainedDevice ? 31 : 34, 1, 0.1, 100);
+            shotThreeCamera.position.set(0, 0.14, constrainedDevice ? 6.7 : 6.2);
+            shotThreeCamera.lookAt(0, -0.18, 0);
             shotThreeRenderer = new THREE.WebGLRenderer({
               canvas: shotThreeWandCanvas,
               alpha: true,
@@ -4688,21 +5122,59 @@
             shotThreeRenderer.outputColorSpace = THREE.SRGBColorSpace;
             shotThreeRenderer.setClearColor(0x000000, 0);
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-            const directional = new THREE.DirectionalLight(0xffffff, 1.5);
-            directional.position.set(5, 10, 5);
-            const spot = new THREE.SpotLight(0xffc266, 1, 18, Math.PI / 5, 0.45, 1);
-            spot.position.set(-5, 5, -5);
-            shotThreeScene.add(ambient, directional, spot);
+            const ambient = new THREE.AmbientLight(0xfff3dc, 0.92);
+            const directional = new THREE.DirectionalLight(0xffffff, 2.15);
+            directional.position.set(3.4, 5.8, 5.2);
+            const fill = new THREE.DirectionalLight(0x8bdcff, 0.48);
+            fill.position.set(-4.8, 1.4, 3.8);
+            const warmSpot = new THREE.SpotLight(0xffb85c, 2.15, 18, Math.PI / 4.8, 0.5, 1.2);
+            warmSpot.position.set(-3.2, 3.8, 4.1);
+            const tipLight = new THREE.PointLight(0xffd27a, 3.4, 7.5, 1.55);
+            tipLight.position.set(0, constrainedDevice ? 0.82 : 0.9, 1.35);
+            shotThreeScene.add(ambient, directional, fill, warmSpot, tipLight);
 
             const loader = new GLTFLoader();
             const modelUrl = getBootObjectUrl(SHOT_THREE_WAND_MODEL);
             await new Promise((resolve, reject) => {
               loader.load(modelUrl, (gltf) => {
-                shotThreeWand = gltf.scene;
-                shotThreeWand.scale.setScalar(constrainedDevice ? 1.78 : 2.22);
-                shotThreeWand.position.set(0, constrainedDevice ? -1.62 : -1.76, 0);
-                shotThreeWand.rotation.set(0.08, 0, -0.07);
+                const wandRoot = gltf.scene;
+                wandRoot.traverse((node) => {
+                  if (!node.isMesh) {
+                    return;
+                  }
+
+                  node.frustumCulled = false;
+                  const oldMaterial = node.material;
+                  const oldMap = Array.isArray(oldMaterial) ? oldMaterial[0]?.map : oldMaterial?.map;
+                  const oldNormalMap = Array.isArray(oldMaterial) ? oldMaterial[0]?.normalMap : oldMaterial?.normalMap;
+                  node.material = new THREE.MeshStandardMaterial({
+                    map: oldMap || null,
+                    normalMap: oldNormalMap || null,
+                    color: 0xffffff,
+                    roughness: 0.52,
+                    metalness: 0.12,
+                    emissive: new THREE.Color(0xff9f45),
+                    emissiveIntensity: 0.14,
+                    side: THREE.DoubleSide
+                  });
+                  if (node.material.map) {
+                    node.material.map.colorSpace = THREE.SRGBColorSpace;
+                    node.material.map.anisotropy = 8;
+                    node.material.map.needsUpdate = true;
+                  }
+                });
+
+                const box = new THREE.Box3().setFromObject(wandRoot);
+                const size = box.getSize(new THREE.Vector3());
+                const center = box.getCenter(new THREE.Vector3());
+                wandRoot.position.sub(center);
+                const targetHeight = constrainedDevice ? 2.25 : 2.55;
+                const normalizedScale = targetHeight / Math.max(0.001, size.y);
+                wandRoot.scale.setScalar(normalizedScale);
+                shotThreeWand = new THREE.Group();
+                shotThreeWand.add(wandRoot);
+                shotThreeWand.position.set(0, constrainedDevice ? -0.24 : -0.32, 0);
+                shotThreeWand.rotation.set(0.03, 0, -0.11);
                 shotThreeScene.add(shotThreeWand);
                 resolve();
               }, undefined, reject);
@@ -4743,16 +5215,22 @@
           }
 
           if (!shotThreeRotationPaused) {
-            shotThreeCarouselRotation = (shotThreeCarouselRotation + delta * (constrainedDevice ? 6 : 8)) % 360;
+            shotThreeRotationTotal += delta * (constrainedDevice ? 8.5 : 10.5);
+            const cycle = Math.floor(shotThreeRotationTotal / 360);
+            if (cycle >= shotThreeNextSwapCycle) {
+              shotThreeNextSwapCycle = cycle + 3;
+              swapShotThreeCards();
+            }
+            shotThreeCarouselRotation = shotThreeRotationTotal % 360;
             setCss("--links-carousel-rotation", `${shotThreeCarouselRotation.toFixed(3)}deg`);
           }
 
           setCss("--links-orb-x", `${(50 + depthPointerNormX * -4 + motionX * 2.8).toFixed(2)}%`);
-          setCss("--links-orb-y", `${(25 + depthPointerNormY * -2.5 + motionY * 1.8).toFixed(2)}%`);
+          setCss("--links-orb-y", `${(34 + depthPointerNormY * -2.5 + motionY * 1.8).toFixed(2)}%`);
 
           if (shotThreeWand) {
             shotThreeWand.rotation.y = seconds * 0.2;
-            shotThreeWand.position.y = (constrainedDevice ? -1.62 : -1.76) + Math.sin(seconds * 1.15) * 0.1;
+            shotThreeWand.position.y = (constrainedDevice ? -0.24 : -0.32) + Math.sin(seconds * 1.15) * 0.055;
           }
 
           if (shotThreeRenderer && shotThreeScene && shotThreeCamera) {
@@ -4762,14 +5240,109 @@
           shotThreeNativeRaf = window.requestAnimationFrame(tickShotThreeNative);
         };
 
+        const ensureShotThreeReactHost = () => {
+          if (!shotThreeReactHost) {
+            return null;
+          }
+
+          if (!shotThreeReactShadow) {
+            shotThreeReactShadow = shotThreeReactHost.attachShadow({ mode: "open" });
+            const styleLink = document.createElement("link");
+            styleLink.rel = "stylesheet";
+            styleLink.href = getBootObjectUrl(SHOT_THREE_REACT_STYLE);
+            shotThreeReactShadow.append(styleLink);
+
+            shotThreeReactMount = document.createElement("div");
+            shotThreeReactMount.className = "shot-three-react-mount";
+            shotThreeReactMount.style.width = "100%";
+            shotThreeReactMount.style.height = "100%";
+            shotThreeReactShadow.append(shotThreeReactMount);
+          }
+
+          return shotThreeReactMount;
+        };
+
+        const loadShotThreeReactBundle = () => {
+          if (window.HayotzerShot3) {
+            return Promise.resolve();
+          }
+
+          if (shotThreeReactScriptPromise) {
+            return shotThreeReactScriptPromise;
+          }
+
+          shotThreeReactScriptPromise = new Promise((resolve, reject) => {
+            const existingScript = document.querySelector("script[data-shot-three-react]");
+            if (existingScript) {
+              existingScript.addEventListener("load", resolve, { once: true });
+              existingScript.addEventListener("error", reject, { once: true });
+              return;
+            }
+
+            const script = document.createElement("script");
+            script.defer = true;
+            script.dataset.shotThreeReact = "true";
+            script.src = getBootObjectUrl(SHOT_THREE_REACT_SCRIPT);
+            script.addEventListener("load", resolve, { once: true });
+            script.addEventListener("error", reject, { once: true });
+            document.head.append(script);
+          });
+
+          return shotThreeReactScriptPromise;
+        };
+
+        const initShotThreeReact = async () => {
+          const mount = ensureShotThreeReactHost();
+          if (!mount) {
+            return;
+          }
+
+          window.HAYOTZER_SHOT3_GLB_URL = getBootObjectUrl(SHOT_THREE_REACT_MODEL);
+          window.HAYOTZER_SHOT3_WAND_RENDER_URL = getBootObjectUrl(SHOT_THREE_WAND_RENDER);
+          window.openShot3Video = (url, title) => openVideoModal(url, title || "Selected work");
+          await loadShotThreeReactBundle();
+
+          if (!window.HayotzerShot3 || typeof window.HayotzerShot3.init !== "function") {
+            throw new Error("HayotzerShot3 bundle did not expose init()");
+          }
+
+          if (!shotThreeReactMounted) {
+            window.HayotzerShot3.init({
+              root: mount,
+              mobile: constrainedDevice,
+              onOpenVideo: (url, title) => openVideoModal(url, title || "Selected work")
+            });
+            shotThreeReactMounted = true;
+          }
+
+          if (linksWorld) {
+            linksWorld.dataset.webgl = "ready";
+          }
+          refreshShotThreeRotationButton();
+        };
+
+        const destroyShotThreeReact = () => {
+          if (shotThreeReactMounted && window.HayotzerShot3 && typeof window.HayotzerShot3.destroy === "function") {
+            window.HayotzerShot3.destroy();
+          }
+          shotThreeReactMounted = false;
+        };
+
         const warmShotThreeAssets = () => {
           if (shotThreeAssetsStarted) {
+            if (!shotThreeReactMounted) {
+              initShotThreeReact().catch((error) => console.warn("Shot 03 React gallery failed to restart", error));
+            }
             return;
           }
 
           shotThreeAssetsStarted = true;
-          renderShotThreeCards();
-          initShotThreeNative();
+          initShotThreeReact().catch((error) => {
+            console.warn("Shot 03 React gallery failed to initialize", error);
+            if (shotThreeReactHost) {
+              shotThreeReactHost.textContent = "The video gallery is still loading...";
+            }
+          });
         };
 
         const showShotThree = () => {
@@ -4790,6 +5363,7 @@
           motionY = 0;
           targetMotionX = 0;
           targetMotionY = 0;
+          shotThreeNextSwapCycle = Math.floor(shotThreeRotationTotal / 360) + 3;
 
           if (!shotThreeNativeRaf) {
             shotThreeNativeRaf = window.requestAnimationFrame(tickShotThreeNative);
@@ -4824,6 +5398,8 @@
             window.cancelAnimationFrame(shotThreeNativeRaf);
             shotThreeNativeRaf = 0;
           }
+
+          destroyShotThreeReact();
 
           setCss("--links-opacity", "0");
           setCss("--links-scale", "1.08");
@@ -6304,6 +6880,13 @@
           });
         }
 
+        window.addEventListener("shot3:open-video", (event) => {
+          const detail = event.detail || {};
+          if (detail.url) {
+            openVideoModal(detail.url, detail.title || "Selected work");
+          }
+        });
+
         linksSkipToGameButton.addEventListener("click", linksAdvanceToGame);
         gameSkipToContactButton.addEventListener("click", advanceGameToContact);
 
@@ -6453,6 +7036,43 @@
           if (event.target === videoModal) {
             closeVideoModal();
           }
+        });
+
+        videoFrame.addEventListener("load", () => {
+          if (!videoModal.classList.contains("is-open") || !videoFrame.getAttribute("src")) {
+            return;
+          }
+
+          videoFrame.dataset.loaded = "true";
+          clearVideoModalTimers();
+          setVideoModalState("ready", "");
+        });
+
+        videoModalPlayButton.addEventListener("click", () => {
+          if (!activeVideoEmbedUrls.length || !videoModal.classList.contains("is-open")) {
+            return;
+          }
+
+          if (activeVideoExternalOnly) {
+            window.open(activeVideoExternalUrl, "_blank", "noopener,noreferrer");
+            return;
+          }
+
+          const loadToken = videoModalLoadToken;
+          clearVideoModalTimers();
+          setVideoModalState("loading", "Opening video player...");
+          videoFrame.removeAttribute("src");
+          videoFrame.dataset.loaded = "false";
+          requestAnimationFrame(() => loadVideoEmbedAt(activeVideoEmbedIndex, loadToken));
+          videoModalActionTimer = window.setTimeout(() => {
+            if (
+              loadToken === videoModalLoadToken
+              && videoModal.classList.contains("is-open")
+              && videoFrame.dataset.loaded !== "true"
+            ) {
+              setVideoModalState("action", "The embedded player is slow. Try again here or open it on YouTube.");
+            }
+          }, 5200);
         });
 
         videoModalClose.addEventListener("click", closeVideoModal);
