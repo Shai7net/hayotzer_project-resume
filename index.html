@@ -21,8 +21,8 @@
     <link rel="icon" href="assets/loader/hayotzer-loader-portal.png" type="image/png" />
     <link rel="preload" href="assets/loader/hayotzer-loader-portal.png" as="image" fetchpriority="high" />
     <link rel="preload" href="assets/shot-4-5/shot-4-5-continuity-20260524.jpg" as="image" />
-    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260529-v3.js" as="script" />
-    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260529-v3.css" as="style" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v6.js" as="script" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v6.css" as="style" />
     <link rel="preload" href="assets/shot-03-wand/Dmagic_wand_model.glb" as="fetch" crossorigin />
     <link rel="preload" href="assets/shot-03-wand/wand-render-20260529.png" as="image" />
     <title>Hayotzer | Opening The Book</title>
@@ -3265,7 +3265,7 @@
         webkit-playsinline
         aria-label="Entering the book animation"
       >
-        <source src="assets/shot-2/enter-book.mp4?v=20260524-wandstorm" type="video/mp4" />
+        <source src="assets/shot-2/enter-book-20260530.mp4?v=20260530-shot2" type="video/mp4" />
       </video>
 
       <div class="aura-grid" aria-hidden="true"></div>
@@ -3324,7 +3324,7 @@
         <span class="break-orb" data-start-x="108" data-start-y="76" data-end-x="74" data-end-y="58" data-delay="0.5" data-trail="196"></span>
         <div class="break-flash" aria-hidden="true"></div>
         <button id="linksSkipToGameButton" class="links-skip-to-game-button" type="button" aria-label="Enter the game shot"></button>
-        <button id="linksRotateToggleButton" class="links-rotate-toggle-button" type="button" aria-label="Pause or resume shot 03 rotation">Pause Spin</button>
+        <button id="linksRotateToggleButton" class="links-rotate-toggle-button" type="button" aria-label="Stop or resume the video gallery rotation">STOP</button>
       </section>
 
       <section id="gameShot" class="game-shot" aria-hidden="true" inert aria-label="Hayotzer spell arcade game">
@@ -3694,8 +3694,8 @@
         const videoModalState = document.getElementById("videoModalState");
         const videoModalStateText = document.getElementById("videoModalStateText");
         const videoModalPlayButton = document.getElementById("videoModalPlayButton");
-        const SHOT_THREE_REACT_SCRIPT = "assets/shot-03-wand/shot3-react-20260529-v3.js";
-        const SHOT_THREE_REACT_STYLE = "assets/shot-03-wand/shot3-react-20260529-v3.css";
+        const SHOT_THREE_REACT_SCRIPT = "assets/shot-03-wand/shot3-react-20260530-v6.js";
+        const SHOT_THREE_REACT_STYLE = "assets/shot-03-wand/shot3-react-20260530-v6.css";
         const SHOT_THREE_REACT_MODEL = "assets/shot-03-wand/Dmagic_wand_model.glb";
         const SHOT_THREE_WAND_RENDER = "assets/shot-03-wand/wand-render-20260529.png";
         const SHOT_THREE_WAND_MODEL = "assets/shot-3/wand/hayotzer-shot3-wand-20260528.glb";
@@ -3897,94 +3897,129 @@
         const SHOT_THREE_VIDEO_POOL = [
           {
             id: "7NoQThZ3UuI",
-            title: "Through the Other Side of the Head",
+            title: "Playtime Apocalypse",
             url: "https://www.youtube.com/watch?v=7NoQThZ3UuI",
             channel: "@shaitt1137",
             accent: 282
           },
           {
+            id: "K1NqrB9rbc4",
+            title: "AI Growth Film",
+            url: "https://www.youtube.com/shorts/K1NqrB9rbc4",
+            channel: "@shaitt1137",
+            accent: 168
+          },
+          {
+            id: "r3VTSucVRgY",
+            title: "Rami Fortis - Final Station",
+            url: "https://www.youtube.com/watch?v=r3VTSucVRgY",
+            channel: "@shaitt1137",
+            accent: 246
+          },
+          {
+            id: "wQfYq-X_nWo",
+            title: "Stone of Time",
+            url: "https://www.youtube.com/watch?v=wQfYq-X_nWo&t=2s",
+            channel: "@shaitt1137",
+            accent: 304
+          },
+          {
+            id: "iN9GPcX9kj4",
+            title: "4 May 2025",
+            url: "https://www.youtube.com/watch?v=iN9GPcX9kj4",
+            channel: "@shaitt1137",
+            accent: 32
+          },
+          {
+            id: "j6pLwNla1ko",
+            title: "From Marble",
+            url: "https://www.youtube.com/watch?v=j6pLwNla1ko",
+            channel: "@shaitt1137",
+            accent: 276
+          },
+          {
+            id: "_PL8aqONgYk",
+            title: "November - AI Film",
+            url: "https://www.youtube.com/watch?v=_PL8aqONgYk",
+            channel: "@shaitt1137",
+            accent: 336
+          },
+          {
+            id: "YjyU59Xr9qU",
+            title: "Stability - Shai Tiri",
+            url: "https://www.youtube.com/watch?v=YjyU59Xr9qU",
+            channel: "@shaitt1137",
+            accent: 18
+          },
+          {
+            id: "nJDiWG522is",
+            title: "Moses Before The King",
+            url: "https://www.youtube.com/watch?v=nJDiWG522is",
+            channel: "@shaitt1137",
+            accent: 48
+          },
+          {
+            id: "8OSA1XFcnJw",
+            title: "The Court Jester",
+            url: "https://www.youtube.com/watch?v=8OSA1XFcnJw&t=17s",
+            channel: "@shaitt1137",
+            accent: 204
+          },
+          {
             id: "gWo-eveJRMY",
-            title: "Cinematic Characters",
+            title: "Animal Chill",
             url: "https://www.youtube.com/watch?v=gWo-eveJRMY",
             channel: "@shaitt1137",
             accent: 326
           },
           {
             id: "qGd-axzPo8w",
-            title: "AI Worlds Gallery",
+            title: "I Wrote You A Song",
             url: "https://www.youtube.com/watch?v=qGd-axzPo8w",
             channel: "@shaitt1137",
             accent: 214
           },
           {
-            id: "YjyU59Xr9qU",
-            title: "Magic & Motion",
-            url: "https://www.youtube.com/watch?v=YjyU59Xr9qU",
-            channel: "@shaitt1137",
-            accent: 18
-          },
-          {
             id: "dn7hREv-MVs",
-            title: "Wandstorm Game Teaser",
+            title: "Clip AI",
             url: "https://www.youtube.com/watch?v=dn7hREv-MVs",
-            channel: "@the88creator",
+            channel: "@shaitt1137",
             accent: 190
           },
           {
             id: "r8hgc_9hFag",
-            title: "Portal Vision",
+            title: "Writing Words In Rain",
             url: "https://www.youtube.com/watch?v=r8hgc_9hFag",
-            channel: "@the88creator",
+            channel: "@shaitt1137",
             accent: 38
           },
           {
-            id: "wQfYq-X_nWo",
-            title: "Hayotzer Color Gate",
-            url: "https://www.youtube.com/watch?v=wQfYq-X_nWo&t=2s",
+            id: "5vz1fRxQbRY",
+            title: "Futurists In The Past",
+            url: "https://www.youtube.com/watch?v=5vz1fRxQbRY",
             channel: "@shaitt1137",
-            accent: 304
+            accent: 264
           },
           {
-            id: "r3VTSucVRgY",
-            title: "Guitar Dream Character",
-            url: "https://www.youtube.com/watch?v=r3VTSucVRgY",
-            channel: "@shaitt1137",
-            accent: 246
-          },
-          {
-            id: "6plwN1a1ko",
-            title: "Mini Portal Fragment",
-            url: "https://www.youtube.com/watch?v=6plwN1a1ko",
+            id: "zHdwXFa7QTE",
+            title: "Stam - AI Film",
+            url: "https://www.youtube.com/watch?v=zHdwXFa7QTE",
             channel: "@the88creator",
-            accent: 276
+            accent: 312
           },
           {
-            id: "8OSAIXFcnJw",
-            title: "AI Cinematic Window",
-            url: "https://www.youtube.com/watch?v=8OSAIXFcnJw&t=17s",
+            id: "1_yVSCDXnyw",
+            title: "Yamore Mashup",
+            url: "https://www.youtube.com/watch?v=1_yVSCDXnyw",
             channel: "@the88creator",
-            accent: 204
-          },
-          {
-            id: "PI8aqONgYk",
-            title: "Open Spaces",
-            url: "https://www.youtube.com/watch?v=PI8aqONgYk",
-            channel: "@the88creator",
-            accent: 336
+            accent: 226
           },
           {
             id: "sedd2J_a4Wg",
-            title: "Book Room Vision",
+            title: "Claustrophobic In Open Space",
             url: "https://www.youtube.com/watch?v=sedd2J_a4Wg&t=11s",
             channel: "@the88creator",
             accent: 34
-          },
-          {
-            id: "K1NqrB9rbc4",
-            title: "Short Spell",
-            url: "https://www.youtube.com/shorts/K1NqrB9rbc4",
-            channel: "@shaitt1137",
-            accent: 168
           }
         ];
 
@@ -4069,8 +4104,8 @@
 
           assets.push(
             {
-              key: "assets/shot-2/enter-book.mp4",
-              url: "assets/shot-2/enter-book.mp4?v=20260524-wandstorm",
+              key: "assets/shot-2/enter-book-20260530.mp4",
+              url: "assets/shot-2/enter-book-20260530.mp4?v=20260530-shot2",
               kind: "video",
               label: "Loading the entrance video"
             },
@@ -4275,7 +4310,7 @@
         };
 
         const applyBootAssets = () => {
-          const videoAsset = getBootAsset("assets/shot-2/enter-book.mp4");
+          const videoAsset = getBootAsset("assets/shot-2/enter-book-20260530.mp4");
           if (videoAsset?.objectUrl) {
             video.src = videoAsset.objectUrl;
           }
@@ -4989,7 +5024,7 @@
           if (!linksRotateToggleButton) {
             return;
           }
-          linksRotateToggleButton.textContent = shotThreeRotationPaused ? "Resume Spin" : "Pause Spin";
+          linksRotateToggleButton.textContent = shotThreeRotationPaused ? "SPIN" : "STOP";
           linksRotateToggleButton.setAttribute("aria-pressed", shotThreeRotationPaused ? "true" : "false");
           if (shotThreeReactMounted && window.HayotzerShot3) {
             if (shotThreeRotationPaused && typeof window.HayotzerShot3.stop === "function") {
@@ -6845,7 +6880,7 @@
           loader.classList.remove("is-hidden");
           document.body.dataset.bootState = "error";
           loaderText.textContent = "Something did not load. Please retry.";
-          console.error("Missing video: assets/shot-2/enter-book.mp4?v=20260524-wandstorm");
+          console.error("Missing video: assets/shot-2/enter-book-20260530.mp4?v=20260530-shot2");
         });
 
         video.addEventListener("ended", () => {
