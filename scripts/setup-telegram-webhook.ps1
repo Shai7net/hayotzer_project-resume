@@ -1,0 +1,47 @@
+param(
+  [string]$EnvPath = (Join-Path (Split-Path -Parent $PSScriptRoot) ".env")
+)
+
+$ErrorActionPreference = "Stop"
+
+if (-not (Test-Path -LiteralPath $EnvPath)) {
+  throw ".env file was not found at $EnvPath"
+}
+
+$envValues = @{}
+Get-Content -LiteralPath $EnvPath | ForEach-Object {
+  $line = $_.Trim()
+  if (-not $line -or $line.StartsWith("#") -or -not $line.Contains("=")) {
+    return
+  }
+  $parts = $line.Split("=", 2)
+  $envValues[$parts[0].Trim()] = $parts[1].Trim()
+}
+
+$token = $envValues["TELEGRAM_BOT_TOKEN"]
+$siteUrl = ($envValues["SITE_PUBLIC_URL"] -replace "/+$", "")
+$secret = $envValues["TELEGRAM_WEBHOOK_SECRET"]
+
+if (-not $token) {
+  throw "TELEGRAM_BOT_TOKEN is missing in .env"
+}
+if (-not $siteUrl -or $siteUrl -eq "https://your-netlify-site.netlify.app") {
+  throw "SITE_PUBLIC_URL must be your Netlify site URL in .env"
+}
+if (-not $secret) {
+  throw "TELEGRAM_WEBHOOK_SECRET is missing in .env"
+}
+
+$body = @{
+  url = "$siteUrl/api/telegram-bot"
+  secret_token = $secret
+  allowed_updates = @("message", "callback_query")
+} | ConvertTo-Json -Depth 4
+
+$response = Invoke-RestMethod `
+  -Uri "https://api.telegram.org/bot$token/setWebhook" `
+  -Method Post `
+  -ContentType "application/json" `
+  -Body $body
+
+$response | ConvertTo-Json -Depth 6

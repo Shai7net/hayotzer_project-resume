@@ -1,0 +1,13 @@
+{
+  "name": "hayotzer-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "check:html-js": "node -e \"const fs=require('fs'); const html=fs.readFileSync('index.html','utf8'); const scripts=[...html.matchAll(/<script[^>]*>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).join('\\n'); new Function(scripts); console.log('js syntax ok');\"",
+    "check:functions": "node --check netlify/functions/analytics.mjs && node --check netlify/functions/telegram-bot.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.7.0"
+  }
+}

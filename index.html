@@ -5197,6 +5197,9 @@
         };
 
         const openVideoModal = (url, title = "Selected work") => {
+          window.dispatchEvent(new CustomEvent("hayotzer:video-open", {
+            detail: { url, title }
+          }));
           activeVideoEmbedUrls = youtubeEmbedUrls(url);
           activeVideoEmbedIndex = 0;
           activeVideoExternalUrl = url;
@@ -6307,6 +6310,9 @@
           if (aliveEnemies.length === 0) {
             gameState.score = 1496;
             gameState.mode = "won";
+            window.dispatchEvent(new CustomEvent("hayotzer:game-complete", {
+              detail: { score: gameState.score }
+            }));
             addGameSpark(gameState.player.x, gameState.player.y - 86, "#f7c873", 34);
             scheduleGameCompletionAdvance();
             return;
@@ -7735,5 +7741,6 @@
         };
       })();
     </script>
+    <script src="assets/js/hayotzer-analytics-20260530.js"></script>
   </body>
 </html>
