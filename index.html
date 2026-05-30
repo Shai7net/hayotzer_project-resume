@@ -21,8 +21,8 @@
     <link rel="icon" href="assets/loader/hayotzer-loader-portal.png" type="image/png" />
     <link rel="preload" href="assets/loader/hayotzer-loader-portal.png" as="image" fetchpriority="high" />
     <link rel="preload" href="assets/shot-4-5/shot-4-5-continuity-20260524.jpg" as="image" />
-    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v6.js" as="script" />
-    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v6.css" as="style" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v7.js" as="script" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v7.css" as="style" />
     <link rel="preload" href="assets/shot-03-wand/Dmagic_wand_model.glb" as="fetch" crossorigin />
     <link rel="preload" href="assets/shot-03-wand/wand-render-20260529.png" as="image" />
     <title>Hayotzer | Opening The Book</title>
@@ -3694,8 +3694,8 @@
         const videoModalState = document.getElementById("videoModalState");
         const videoModalStateText = document.getElementById("videoModalStateText");
         const videoModalPlayButton = document.getElementById("videoModalPlayButton");
-        const SHOT_THREE_REACT_SCRIPT = "assets/shot-03-wand/shot3-react-20260530-v6.js";
-        const SHOT_THREE_REACT_STYLE = "assets/shot-03-wand/shot3-react-20260530-v6.css";
+        const SHOT_THREE_REACT_SCRIPT = "assets/shot-03-wand/shot3-react-20260530-v7.js";
+        const SHOT_THREE_REACT_STYLE = "assets/shot-03-wand/shot3-react-20260530-v7.css";
         const SHOT_THREE_REACT_MODEL = "assets/shot-03-wand/Dmagic_wand_model.glb";
         const SHOT_THREE_WAND_RENDER = "assets/shot-03-wand/wand-render-20260529.png";
         const SHOT_THREE_WAND_MODEL = "assets/shot-3/wand/hayotzer-shot3-wand-20260528.glb";
@@ -6326,7 +6326,7 @@
         };
 
         const beginPanDrag = (event) => {
-          if (!shotThreeStarted || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button, .links-guide")) {
+          if (!shotThreeStarted || event.target.closest(".shot-three-react-host, .links-world--react, .video-hotspot, .links-pan-button, .links-skip-to-game-button, .links-guide")) {
             return;
           }
 
@@ -6354,7 +6354,7 @@
         };
 
         const beginPanTouch = (event) => {
-          if (!shotThreeStarted || event.touches.length !== 1 || event.target.closest(".video-hotspot, .links-pan-button, .links-skip-to-game-button, .links-guide")) {
+          if (!shotThreeStarted || event.touches.length !== 1 || event.target.closest(".shot-three-react-host, .links-world--react, .video-hotspot, .links-pan-button, .links-skip-to-game-button, .links-guide")) {
             return;
           }
 
@@ -6965,6 +6965,10 @@
         linksShot.addEventListener("touchcancel", endPanTouch, { passive: true });
         linksShot.addEventListener("wheel", (event) => {
           if (!shotThreeStarted) {
+            return;
+          }
+
+          if (event.target.closest(".shot-three-react-host, .links-world--react")) {
             return;
           }
 
