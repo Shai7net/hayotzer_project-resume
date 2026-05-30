@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,8 +21,8 @@
     <link rel="icon" href="assets/loader/hayotzer-loader-portal.png" type="image/png" />
     <link rel="preload" href="assets/loader/hayotzer-loader-portal.png" as="image" fetchpriority="high" />
     <link rel="preload" href="assets/shot-4-5/shot-4-5-continuity-20260524.jpg" as="image" />
-    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v7.js" as="script" />
-    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v7.css" as="style" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v8.js" as="script" />
+    <link rel="preload" href="assets/shot-03-wand/shot3-react-20260530-v8.css" as="style" />
     <link rel="preload" href="assets/shot-03-wand/Dmagic_wand_model.glb" as="fetch" crossorigin />
     <link rel="preload" href="assets/shot-03-wand/wand-render-20260529.png" as="image" />
     <title>Hayotzer | Opening The Book</title>
@@ -104,6 +104,202 @@
 
       * {
         box-sizing: border-box;
+      }
+
+      *:focus {
+        outline: 0.18rem solid rgba(255, 221, 139, 0.8);
+        outline-offset: 0.22rem;
+      }
+
+      *:focus:not(:focus-visible) {
+        outline: none;
+        box-shadow: none;
+      }
+
+      *:focus-visible {
+        outline: 0.18rem solid rgba(255, 221, 139, 0.95);
+        outline-offset: 0.22rem;
+        box-shadow:
+          0 0 0 0.28rem rgba(103, 248, 255, 0.22),
+          0 0 1.6rem rgba(255, 221, 139, 0.34);
+      }
+
+      .skip-link {
+        position: fixed;
+        top: 0.85rem;
+        right: 0.85rem;
+        z-index: 90;
+        transform: translateY(-170%);
+        border: 1px solid rgba(255, 221, 139, 0.72);
+        border-radius: 999px;
+        padding: 0.72rem 1rem;
+        background: rgba(8, 5, 18, 0.92);
+        color: #fff7d5;
+        font-weight: 800;
+        text-decoration: none;
+        direction: rtl;
+        box-shadow: 0 0 2rem rgba(247, 200, 115, 0.24);
+        transition: transform 180ms ease, opacity 180ms ease;
+      }
+
+      .skip-link:focus-visible {
+        transform: translateY(0);
+      }
+
+      .site-header,
+      .site-footer {
+        position: fixed;
+        z-index: 36;
+        direction: rtl;
+      }
+
+      .site-header {
+        top: 0.85rem;
+        right: 0.85rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 160ms ease;
+      }
+
+      .site-header:focus-within {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .site-nav {
+        display: flex;
+        gap: 0.45rem;
+        align-items: center;
+      }
+
+      .site-footer {
+        top: 0.85rem;
+        left: 0.85rem;
+        opacity: 0.72;
+        transition: opacity 160ms ease;
+      }
+
+      .site-footer:focus-within,
+      .site-footer:hover {
+        opacity: 1;
+      }
+
+      .site-nav a,
+      .site-footer a,
+      .accessibility-statement a {
+        color: #fff4cc;
+        text-decoration: underline;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 0.2em;
+      }
+
+      .site-nav a,
+      .site-footer a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.25rem;
+        border: 1px solid rgba(255, 221, 139, 0.28);
+        border-radius: 999px;
+        padding: 0.45rem 0.72rem;
+        background: rgba(7, 7, 17, 0.48);
+        backdrop-filter: blur(14px);
+        color: rgba(255, 246, 218, 0.88);
+        font-size: 0.78rem;
+        font-weight: 750;
+        letter-spacing: 0;
+        text-decoration: none;
+      }
+
+      .site-nav a:hover,
+      .site-footer a:hover {
+        border-color: rgba(255, 221, 139, 0.58);
+        color: #ffffff;
+        text-decoration: underline;
+      }
+
+      body[data-boot-state="loading"] .site-header,
+      body[data-boot-state="loading"] .site-footer,
+      body[data-boot-state="error"] .site-header,
+      body[data-boot-state="error"] .site-footer {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .accessibility-statement {
+        position: fixed;
+        inset: clamp(0.75rem, 4vw, 2rem);
+        z-index: 85;
+        display: grid;
+        place-items: center;
+        overflow: auto;
+        padding: 1rem;
+        background:
+          radial-gradient(circle at 70% 20%, rgba(247, 200, 115, 0.16), transparent 20rem),
+          rgba(2, 2, 8, 0.78);
+        color: #fff8e5;
+        direction: rtl;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        backdrop-filter: blur(18px);
+        transition: opacity 180ms ease, visibility 180ms ease;
+      }
+
+      .accessibility-statement:target {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .accessibility-statement__panel {
+        position: relative;
+        width: min(42rem, 100%);
+        max-height: min(80svh, 48rem);
+        overflow: auto;
+        border: 1px solid rgba(255, 221, 139, 0.32);
+        border-radius: 0.85rem;
+        padding: clamp(1.1rem, 4vw, 2rem);
+        background:
+          linear-gradient(135deg, rgba(22, 15, 37, 0.94), rgba(6, 5, 15, 0.95)),
+          rgba(6, 5, 15, 0.95);
+        box-shadow:
+          0 1.2rem 5rem rgba(0, 0, 0, 0.72),
+          inset 0 0 3.5rem rgba(247, 200, 115, 0.06);
+      }
+
+      .accessibility-statement__close {
+        position: sticky;
+        top: 0;
+        float: left;
+        display: inline-grid;
+        place-items: center;
+        width: 2.35rem;
+        height: 2.35rem;
+        border: 1px solid rgba(255, 221, 139, 0.38);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+        font-size: 1.35rem;
+        line-height: 1;
+        text-decoration: none;
+      }
+
+      .accessibility-statement h2 {
+        margin: 0 0 1rem;
+        color: #ffe2a0;
+        font-size: clamp(1.7rem, 4.5vw, 2.45rem);
+        line-height: 1.08;
+      }
+
+      .accessibility-statement p {
+        margin: 0 0 0.92rem;
+        color: rgba(255, 248, 229, 0.88);
+        font-size: clamp(0.95rem, 2.5vw, 1.06rem);
+        line-height: 1.72;
+      }
+
+      .accessibility-statement strong {
+        color: #ffffff;
       }
 
       html {
@@ -3229,6 +3425,15 @@
       }
 
       @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.001ms !important;
+        }
+
         html {
           scroll-behavior: auto;
         }
@@ -3244,15 +3449,34 @@
 
         .game-shell,
         .contact-shell,
+        .links-world,
+        .intro-copy,
+        .loader__ring,
+        .video-modal__spinner,
         .shatter-fragment,
         .break-orb {
           transition-duration: 0.01ms;
+        }
+
+        .break-orb,
+        .shatter-fragment,
+        .loader__ring,
+        .video-modal__spinner {
+          animation: none !important;
         }
       }
     </style>
   </head>
   <body data-boot-state="loading">
-    <main class="stage" aria-label="Opening scene for Hayotzer">
+    <a class="skip-link" href="#mainContent">דלג לתוכן המרכזי</a>
+    <header class="site-header" lang="he" dir="rtl">
+      <nav class="site-nav" aria-label="ניווט מהיר">
+        <a href="#mainContent">תוכן מרכזי</a>
+        <a href="#accessibility-statement">הצהרת נגישות</a>
+      </nav>
+    </header>
+
+    <main id="mainContent" class="stage" aria-label="Opening scene for Hayotzer" lang="en" dir="ltr" tabindex="-1">
       <canvas id="bookCanvas" width="1280" height="720" aria-hidden="true"></canvas>
 
       <video
@@ -3274,7 +3498,7 @@
         <img src="assets/shot-4-5/shot-4-5-continuity-20260524.jpg" alt="" draggable="false" decoding="async" />
       </div>
 
-      <section class="intro-copy">
+      <section class="intro-copy" aria-labelledby="sceneTitle">
         <h1 id="sceneTitle" data-text="Welcome to Hayotzer">Welcome to <span>Hayotzer</span></h1>
         <p id="sceneLead" class="lead">A cinematic portfolio of AI-born worlds.</p>
         <p id="sceneBody" class="scene-body" aria-live="polite"></p>
@@ -3310,7 +3534,7 @@
           <span class="shatter-fragment" data-dx="18" data-dy="34" data-rot="-15" data-delay="0.36" style="--col: 2; --row: 2; --origin: 42% 16%; --hit-x: 44%; --hit-y: 18%; --cut: polygon(10% 0, 100% 10%, 100% 100%, 0 84%);"></span>
           <span class="shatter-fragment" data-dx="42" data-dy="27" data-rot="18" data-delay="0.42" style="--col: 3; --row: 2; --origin: 20% 14%; --hit-x: 26%; --hit-y: 18%; --cut: polygon(0 12%, 100% 0, 100% 100%, 14% 82%);"></span>
         </div>
-        <div id="linksGuide" class="links-guide" aria-hidden="true">
+        <div id="linksGuide" class="links-guide" aria-hidden="true" inert>
           <div class="links-guide__panel" role="dialog" aria-modal="false" aria-labelledby="linksGuideTitle">
             <h2 id="linksGuideTitle">The Video Gallery Opens</h2>
             <p>Tap a floating window to enter the film.</p>
@@ -3327,11 +3551,11 @@
         <button id="linksRotateToggleButton" class="links-rotate-toggle-button" type="button" aria-label="Stop or resume the video gallery rotation">STOP</button>
       </section>
 
-      <section id="gameShot" class="game-shot" aria-hidden="true" inert aria-label="Hayotzer spell arcade game">
+      <section id="gameShot" class="game-shot" aria-hidden="true" inert aria-labelledby="gameShotTitle">
         <div class="game-shell">
           <div class="game-copy">
             <div class="game-kicker" aria-hidden="true"></div>
-            <h2>Hayotzer: Wandstorm</h2>
+            <h2 id="gameShotTitle">Hayotzer: Wandstorm</h2>
             <p>An open-source arcade experiment by Hayotzer, built from knowledge in software development, open-source tools, and browser games. Clear the living letters before the spell reaches the gate.</p>
           </div>
           <div class="game-play-column">
@@ -3353,11 +3577,11 @@
         <button id="gameSkipToContactButton" class="game-skip-to-contact-button" type="button" aria-label="Continue to the final page"></button>
       </section>
 
-      <section id="contactShot" class="contact-shot" aria-hidden="true" inert aria-label="Hayotzer work in progress and contact" lang="en">
+      <section id="contactShot" class="contact-shot" aria-hidden="true" inert aria-labelledby="contactShotTitle" lang="en" dir="ltr">
         <div class="contact-shell">
           <div class="contact-copy">
             <div class="contact-kicker" aria-hidden="true"></div>
-            <h2>The Book Is Still Writing Itself</h2>
+            <h2 id="contactShotTitle">The Book Is Still Writing Itself</h2>
             <p>
               This site is still under construction. More works, AI worlds, videos, and interactive rooms will be uploaded soon.
             </p>
@@ -3383,7 +3607,38 @@
       </section>
     </main>
 
-    <div id="loader" class="loader" role="status" aria-live="polite" aria-label="Loading Hayotzer">
+    <footer class="site-footer" lang="he" dir="rtl">
+      <a href="#accessibility-statement">הצהרת נגישות</a>
+    </footer>
+
+    <section
+      id="accessibility-statement"
+      class="accessibility-statement"
+      lang="he"
+      dir="rtl"
+      tabindex="-1"
+      aria-labelledby="accessibilityTitle"
+    >
+      <div class="accessibility-statement__panel">
+        <a class="accessibility-statement__close" href="#mainContent" aria-label="סגירת הצהרת הנגישות">×</a>
+        <h2 id="accessibilityTitle">הצהרת נגישות</h2>
+        <p>
+          אני רואה חשיבות בהנגשת האתר לכלל המשתמשים, לרבות אנשים עם מוגבלות. האתר נבנה תוך ניסיון לעמוד בעקרונות נגישות מקובלים, כולל מבנה כותרות תקין, ניווט באמצעות מקלדת, טקסטים קריאים, תיאורי תמונות, ניגודיות צבעים ושימוש בסימון סמנטי תקין ככל האפשר.
+        </p>
+        <p>
+          האתר הוא אתר פורטפוליו אישי/מקצועי ומתעדכן מעת לעת. ייתכן שלמרות המאמצים, חלקים מסוימים באתר עדיין אינם נגישים באופן מלא.
+        </p>
+        <p>
+          אם נתקלתם בבעיית נגישות, אשמח שתעדכנו אותי כדי שאוכל לבדוק ולתקן בהקדם.
+        </p>
+        <p><strong>פנייה בנושא נגישות:</strong></p>
+        <p><strong>שם:</strong> שי</p>
+        <p><strong>דוא"ל:</strong> <a href="mailto:shai7net@gmail.com">shai7net@gmail.com</a></p>
+        <p><strong>תאריך עדכון הצהרת הנגישות:</strong> 30 במאי 2026</p>
+      </div>
+    </section>
+
+    <div id="loader" class="loader" role="status" aria-live="polite" aria-label="Loading Hayotzer" lang="en" dir="ltr">
       <div class="loader__shell">
         <div class="loader__portal" aria-hidden="true">
           <img src="assets/loader/hayotzer-loader-portal.png" alt="" draggable="false" decoding="async" />
@@ -3405,7 +3660,7 @@
       </div>
     </div>
 
-    <div id="videoModal" class="video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Video viewer">
+    <div id="videoModal" class="video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle" lang="en" dir="ltr">
       <div class="video-modal__panel">
         <button id="videoModalClose" class="video-modal__close" type="button" aria-label="Close video">×</button>
         <div class="video-modal__frame">
@@ -3661,6 +3916,10 @@
         }
 
         const root = document.documentElement;
+        const mainContent = document.getElementById("mainContent");
+        const skipLink = document.querySelector(".skip-link");
+        const accessibilityStatement = document.getElementById("accessibility-statement");
+        const accessibilityClose = document.querySelector(".accessibility-statement__close");
         const canvas = document.getElementById("bookCanvas");
         const context = canvas.getContext("2d", { alpha: false });
         const magicCanvas = document.getElementById("magicBurstCanvas");
@@ -3694,8 +3953,8 @@
         const videoModalState = document.getElementById("videoModalState");
         const videoModalStateText = document.getElementById("videoModalStateText");
         const videoModalPlayButton = document.getElementById("videoModalPlayButton");
-        const SHOT_THREE_REACT_SCRIPT = "assets/shot-03-wand/shot3-react-20260530-v7.js";
-        const SHOT_THREE_REACT_STYLE = "assets/shot-03-wand/shot3-react-20260530-v7.css";
+        const SHOT_THREE_REACT_SCRIPT = "assets/shot-03-wand/shot3-react-20260530-v8.js";
+        const SHOT_THREE_REACT_STYLE = "assets/shot-03-wand/shot3-react-20260530-v8.css";
         const SHOT_THREE_REACT_MODEL = "assets/shot-03-wand/Dmagic_wand_model.glb";
         const SHOT_THREE_WAND_RENDER = "assets/shot-03-wand/wand-render-20260529.png";
         const SHOT_THREE_WAND_MODEL = "assets/shot-3/wand/hayotzer-shot3-wand-20260528.glb";
@@ -3718,6 +3977,8 @@
         const loaderMode = document.getElementById("loaderMode");
         const loaderRetry = document.getElementById("loaderRetry");
         const frames = new Array(FRAME_COUNT);
+        const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const prefersReducedMotion = () => reducedMotionQuery.matches;
 
         video.muted = true;
         video.playsInline = true;
@@ -4621,7 +4882,7 @@
         };
 
         const triggerMagicBurst = (intensity = 1) => {
-          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          if (prefersReducedMotion()) {
             return;
           }
 
@@ -4942,11 +5203,78 @@
           lastModalFocus = null;
         };
 
+        const getVideoModalFocusable = () => Array.from(
+          videoModal.querySelectorAll("a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex='-1'])")
+        ).filter((element) => {
+          if (!(element instanceof HTMLElement)) {
+            return false;
+          }
+          if (element.hidden || element.getAttribute("aria-hidden") === "true") {
+            return false;
+          }
+          const style = window.getComputedStyle(element);
+          return style.display !== "none" && style.visibility !== "hidden";
+        });
+
+        const trapVideoModalFocus = (event) => {
+          const focusable = getVideoModalFocusable();
+          if (!focusable.length) {
+            event.preventDefault();
+            videoModalClose.focus();
+            return;
+          }
+
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          const active = document.activeElement;
+
+          if (event.shiftKey && active === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && active === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        };
+
+        const focusMainContent = () => {
+          if (!mainContent) {
+            return;
+          }
+          try {
+            mainContent.focus({ preventScroll: true });
+          } catch (error) {
+            mainContent.focus();
+          }
+        };
+
+        const focusAccessibilityStatement = () => {
+          if (window.location.hash !== "#accessibility-statement" || !accessibilityStatement) {
+            return;
+          }
+          requestAnimationFrame(() => {
+            try {
+              accessibilityStatement.focus({ preventScroll: true });
+            } catch (error) {
+              accessibilityStatement.focus();
+            }
+          });
+        };
+
+        const closeAccessibilityStatement = () => {
+          if (window.location.hash === "#accessibility-statement") {
+            const cleanUrl = `${window.location.pathname}${window.location.search}`;
+            window.history.pushState(null, document.title, cleanUrl || window.location.pathname);
+            requestAnimationFrame(focusMainContent);
+          }
+        };
+
         const dismissLinksGuide = () => {
           window.clearTimeout(linksGuideTimer);
           linksGuideTimer = 0;
           linksGuide.classList.remove("is-visible");
           linksGuide.setAttribute("aria-hidden", "true");
+          linksGuide.setAttribute("inert", "");
         };
 
         const showLinksGuide = () => {
@@ -4957,6 +5285,7 @@
           linksGuideShown = true;
           linksGuide.classList.add("is-visible");
           linksGuide.setAttribute("aria-hidden", "false");
+          linksGuide.removeAttribute("inert");
           triggerMagicBurst(constrainedDevice ? 0.24 : 0.4);
           linksGuideTimer = window.setTimeout(dismissLinksGuide, 3800);
         };
@@ -6522,7 +6851,7 @@
           const startTime = performance.now();
           const safeDuration = Math.max(0, duration);
 
-          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || safeDuration <= 0) {
+          if (prefersReducedMotion() || safeDuration <= 0) {
             window.scrollTo(0, endY);
             requestUpdate();
             resolve();
@@ -6723,6 +7052,12 @@
 
           shotTwoStarted = true;
           warmShotThreeAssets();
+          if (prefersReducedMotion()) {
+            video.pause();
+            completeShotTwo();
+            return;
+          }
+
           if (!videoReady || !Number.isFinite(video.duration) || video.duration <= 0) {
             return;
           }
@@ -7067,8 +7402,22 @@
 
         homeButton.addEventListener("click", () => {
           closeVideoModal();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
           triggerMagicBurst(constrainedDevice ? 0.24 : 0.38);
+        });
+
+        skipLink?.addEventListener("click", (event) => {
+          event.preventDefault();
+          window.location.hash = "mainContent";
+          focusMainContent();
+        });
+
+        window.addEventListener("hashchange", focusAccessibilityStatement);
+        focusAccessibilityStatement();
+
+        accessibilityClose?.addEventListener("click", (event) => {
+          event.preventDefault();
+          closeAccessibilityStatement();
         });
 
         videoModal.addEventListener("click", (event) => {
@@ -7117,8 +7466,28 @@
         videoModalClose.addEventListener("click", closeVideoModal);
 
         window.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && videoModal.classList.contains("is-open")) {
-            closeVideoModal();
+          if (event.key === "Escape" && window.location.hash === "#accessibility-statement") {
+            event.preventDefault();
+            closeAccessibilityStatement();
+            return;
+          }
+
+          if (videoModal.classList.contains("is-open")) {
+            if (event.key === "Escape") {
+              event.preventDefault();
+              closeVideoModal();
+              return;
+            }
+            if (event.key === "Tab") {
+              trapVideoModalFocus(event);
+              return;
+            }
+          }
+
+          if (event.key === "Escape" && linksGuide.classList.contains("is-visible")) {
+            event.preventDefault();
+            dismissLinksGuide();
+            return;
           }
 
           if (shotFourStarted && !videoModal.classList.contains("is-open")) {
