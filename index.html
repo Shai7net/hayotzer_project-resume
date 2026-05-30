@@ -251,6 +251,12 @@
         pointer-events: auto;
       }
 
+      .accessibility-statement.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
       .accessibility-statement__panel {
         position: relative;
         width: min(42rem, 100%);
@@ -268,20 +274,26 @@
       }
 
       .accessibility-statement__close {
-        position: sticky;
-        top: 0;
-        float: left;
+        position: absolute;
+        top: 0.9rem;
+        left: 0.9rem;
         display: inline-grid;
         place-items: center;
-        width: 2.35rem;
-        height: 2.35rem;
-        border: 1px solid rgba(255, 221, 139, 0.38);
+        width: 2.65rem;
+        height: 2.65rem;
+        border: 1px solid rgba(255, 221, 139, 0.52);
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.07);
+        background: rgba(10, 7, 22, 0.88);
         color: #fff;
-        font-size: 1.35rem;
+        font-size: 1.55rem;
         line-height: 1;
         text-decoration: none;
+        box-shadow: 0 0 1.2rem rgba(247, 200, 115, 0.18);
+      }
+
+      .accessibility-statement__close:hover {
+        border-color: rgba(255, 221, 139, 0.84);
+        background: rgba(255, 255, 255, 0.12);
       }
 
       .accessibility-statement h2 {
@@ -300,6 +312,67 @@
 
       .accessibility-statement strong {
         color: #ffffff;
+      }
+
+      .accessibility-fab {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        width: 3rem;
+        height: 3rem;
+        min-height: 3rem;
+        padding: 0;
+        border: 1px solid rgba(255, 221, 139, 0.44);
+        border-radius: 999px;
+        background:
+          radial-gradient(circle at 38% 28%, rgba(255, 255, 255, 0.24), transparent 1rem),
+          linear-gradient(145deg, rgba(247, 200, 115, 0.26), rgba(29, 18, 54, 0.78));
+        color: #fff7d7;
+        box-shadow:
+          0 0 1.5rem rgba(247, 200, 115, 0.24),
+          inset 0 0 1rem rgba(255, 255, 255, 0.08);
+        text-decoration: none;
+      }
+
+      .accessibility-fab:hover,
+      .accessibility-fab:focus-visible {
+        border-color: rgba(255, 221, 139, 0.86);
+        color: #ffffff;
+        text-decoration: none;
+        transform: translateY(-1px);
+      }
+
+      .accessibility-fab svg {
+        width: 1.58rem;
+        height: 1.58rem;
+        stroke: currentColor;
+        filter: drop-shadow(0 0 0.5rem rgba(255, 221, 139, 0.34));
+      }
+
+      .accessibility-fab__label {
+        position: absolute;
+        top: 50%;
+        left: calc(100% + 0.55rem);
+        transform: translateY(-50%) translateX(-0.2rem);
+        width: max-content;
+        max-width: 9rem;
+        border: 1px solid rgba(255, 221, 139, 0.34);
+        border-radius: 999px;
+        padding: 0.34rem 0.62rem;
+        background: rgba(7, 7, 17, 0.78);
+        color: rgba(255, 246, 218, 0.92);
+        font-size: 0.76rem;
+        font-weight: 750;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 160ms ease, transform 160ms ease;
+        backdrop-filter: blur(12px);
+      }
+
+      .accessibility-fab:hover .accessibility-fab__label,
+      .accessibility-fab:focus-visible .accessibility-fab__label {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
       }
 
       html {
@@ -3472,7 +3545,7 @@
     <header class="site-header" lang="he" dir="rtl">
       <nav class="site-nav" aria-label="ניווט מהיר">
         <a href="#mainContent">תוכן מרכזי</a>
-        <a href="#accessibility-statement">הצהרת נגישות</a>
+        <a class="accessibility-trigger" href="#accessibility-statement">הצהרת נגישות</a>
       </nav>
     </header>
 
@@ -3608,7 +3681,19 @@
     </main>
 
     <footer class="site-footer" lang="he" dir="rtl">
-      <a href="#accessibility-statement">הצהרת נגישות</a>
+      <a
+        class="accessibility-fab accessibility-trigger"
+        href="#accessibility-statement"
+        aria-label="פתיחת הצהרת נגישות"
+        title="נגישות"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="4.5" r="2.1" fill="currentColor" stroke="none"></circle>
+          <path d="M4.8 9.1c3.9-1.2 10.5-1.2 14.4 0" fill="none" stroke-width="2.2" stroke-linecap="round"></path>
+          <path d="M12 7.4v5.4m0 0-3.8 6.5m3.8-6.5 3.8 6.5" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="accessibility-fab__label">נגישות</span>
+      </a>
     </footer>
 
     <section
@@ -3618,6 +3703,8 @@
       dir="rtl"
       tabindex="-1"
       aria-labelledby="accessibilityTitle"
+      aria-hidden="true"
+      inert
     >
       <div class="accessibility-statement__panel">
         <a class="accessibility-statement__close" href="#mainContent" aria-label="סגירת הצהרת הנגישות">×</a>
@@ -3920,6 +4007,7 @@
         const skipLink = document.querySelector(".skip-link");
         const accessibilityStatement = document.getElementById("accessibility-statement");
         const accessibilityClose = document.querySelector(".accessibility-statement__close");
+        const accessibilityTriggers = document.querySelectorAll(".accessibility-trigger");
         const canvas = document.getElementById("bookCanvas");
         const context = canvas.getContext("2d", { alpha: false });
         const magicCanvas = document.getElementById("magicBurstCanvas");
@@ -4108,6 +4196,7 @@
         let shotBreakStarted = false;
         let shotFiveStarted = false;
         let lastModalFocus = null;
+        let lastAccessibilityFocus = null;
         let videoModalLoadToken = 0;
         let videoModalLoadTimer = 0;
         let videoModalActionTimer = 0;
@@ -5248,25 +5337,64 @@
           }
         };
 
-        const focusAccessibilityStatement = () => {
-          if (window.location.hash !== "#accessibility-statement" || !accessibilityStatement) {
+        const isAccessibilityStatementOpen = () => Boolean(
+          accessibilityStatement
+          && (
+            accessibilityStatement.classList.contains("is-open")
+            || window.location.hash === "#accessibility-statement"
+          )
+        );
+
+        const openAccessibilityStatement = (event) => {
+          event?.preventDefault();
+          if (!accessibilityStatement) {
             return;
+          }
+          lastAccessibilityFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+          accessibilityStatement.classList.add("is-open");
+          accessibilityStatement.setAttribute("aria-hidden", "false");
+          accessibilityStatement.removeAttribute("inert");
+          if (window.location.hash !== "#accessibility-statement") {
+            const nextUrl = new URL(window.location.href);
+            nextUrl.hash = "accessibility-statement";
+            window.history.pushState(null, document.title, nextUrl.toString());
           }
           requestAnimationFrame(() => {
             try {
-              accessibilityStatement.focus({ preventScroll: true });
+              accessibilityClose?.focus({ preventScroll: true });
             } catch (error) {
-              accessibilityStatement.focus();
+              accessibilityClose?.focus();
             }
           });
         };
 
-        const closeAccessibilityStatement = () => {
+        const focusAccessibilityStatement = () => {
           if (window.location.hash === "#accessibility-statement") {
-            const cleanUrl = `${window.location.pathname}${window.location.search}`;
-            window.history.pushState(null, document.title, cleanUrl || window.location.pathname);
-            requestAnimationFrame(focusMainContent);
+            openAccessibilityStatement();
           }
+        };
+
+        const closeAccessibilityStatement = () => {
+          if (!accessibilityStatement || !isAccessibilityStatementOpen()) {
+            return;
+          }
+          accessibilityStatement.classList.remove("is-open");
+          accessibilityStatement.setAttribute("aria-hidden", "true");
+          accessibilityStatement.setAttribute("inert", "");
+          const cleanUrl = new URL(window.location.href);
+          cleanUrl.hash = "";
+          window.history.pushState(null, document.title, cleanUrl.toString());
+          requestAnimationFrame(() => {
+            const target = lastAccessibilityFocus && document.contains(lastAccessibilityFocus)
+              ? lastAccessibilityFocus
+              : mainContent;
+            try {
+              target?.focus({ preventScroll: true });
+            } catch (error) {
+              target?.focus();
+            }
+            lastAccessibilityFocus = null;
+          });
         };
 
         const dismissLinksGuide = () => {
@@ -7415,9 +7543,19 @@
         window.addEventListener("hashchange", focusAccessibilityStatement);
         focusAccessibilityStatement();
 
+        accessibilityTriggers.forEach((trigger) => {
+          trigger.addEventListener("click", openAccessibilityStatement);
+        });
+
         accessibilityClose?.addEventListener("click", (event) => {
           event.preventDefault();
           closeAccessibilityStatement();
+        });
+
+        accessibilityStatement?.addEventListener("click", (event) => {
+          if (event.target === accessibilityStatement) {
+            closeAccessibilityStatement();
+          }
         });
 
         videoModal.addEventListener("click", (event) => {
@@ -7466,7 +7604,7 @@
         videoModalClose.addEventListener("click", closeVideoModal);
 
         window.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && window.location.hash === "#accessibility-statement") {
+          if (event.key === "Escape" && isAccessibilityStatementOpen()) {
             event.preventDefault();
             closeAccessibilityStatement();
             return;
