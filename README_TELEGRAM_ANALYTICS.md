@@ -24,10 +24,11 @@ TELEGRAM_DAILY_CHAT_IDS=
 TELEGRAM_DAILY_REPORT_ENABLED=false
 TELEGRAM_DAILY_REPORT_KIND=last24
 TELEGRAM_WEBHOOK_SECRET=PUT_LONG_RANDOM_WEBHOOK_SECRET_HERE
+TELEGRAM_WEBHOOK_BASE_URL=https://your-netlify-functions-site.netlify.app
 ANALYTICS_OWNER_SECRET=PUT_LONG_RANDOM_OWNER_SECRET_HERE
 ANALYTICS_TIMEZONE=Asia/Jerusalem
 TELEGRAM_NOTIFY_VISITS=false
-SITE_PUBLIC_URL=https://your-netlify-site.netlify.app
+SITE_PUBLIC_URL=https://shai7net.github.io/hayotzer_project-resume/?v=785bdfd
 ```
 
 Notes:
@@ -40,8 +41,10 @@ Notes:
 - `TELEGRAM_DAILY_REPORT_ENABLED=true` turns on the daily scheduled report. Leave it `false` until the target is ready.
 - `TELEGRAM_DAILY_REPORT_KIND` can be `last24`, `today`, `yesterday`, or `week`.
 - `TELEGRAM_WEBHOOK_SECRET` should be a long random private string.
+- `TELEGRAM_WEBHOOK_BASE_URL` must be the Netlify URL that hosts the Telegram webhook functions.
 - `ANALYTICS_OWNER_SECRET` is used to mark your own visits so they are not counted like public visitors.
-- `SITE_PUBLIC_URL` must be the real Netlify site URL, not the GitHub Pages URL.
+- `SITE_PUBLIC_URL` should be the public GitHub Pages URL that visitors actually use.
+- GitHub Pages sends small analytics requests to the Netlify `/api/analytics` function, while heavy static media stays on GitHub Pages.
 
 ## Bot Commands
 
@@ -75,8 +78,9 @@ The schedule is currently `0 6 * * *` in UTC, which is morning in Israel for mos
 
 1. Fill the real values in `.env`.
 2. Deploy the site to Netlify with the same environment variables configured in Netlify.
-3. Set `SITE_PUBLIC_URL` to the public Netlify URL.
-4. Run:
+3. Set `SITE_PUBLIC_URL` to the public GitHub Pages URL.
+4. Set `TELEGRAM_WEBHOOK_BASE_URL` to the Netlify URL.
+5. Run:
 
 ```powershell
 .\scripts\setup-telegram-webhook.ps1

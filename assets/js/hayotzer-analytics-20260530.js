@@ -5,9 +5,12 @@
   const STORAGE_VISITOR = "hayotzerVisitorId";
   const SESSION_KEY = "hayotzerSessionId";
   const STARTED_AT = Date.now();
+  const GITHUB_PAGES_ANALYTICS_ENDPOINT = "https://resonant-horse-3ed3a6.netlify.app/api/analytics";
+  const isGithubPages = /(^|\.)github\.io$/i.test(window.location.hostname);
   const canUseSameOriginEndpoint = /^https?:$/i.test(window.location.protocol)
-    && !/github\.io$/i.test(window.location.hostname);
+    && !isGithubPages;
   const ENDPOINT = window.HAYOTZER_ANALYTICS_ENDPOINT
+    || (isGithubPages ? GITHUB_PAGES_ANALYTICS_ENDPOINT : "")
     || (canUseSameOriginEndpoint ? "/api/analytics" : "");
 
   if (!ENDPOINT) return;
