@@ -5260,7 +5260,7 @@
           && !videoModal.classList.contains("is-open")
         );
 
-        const setPreviewLayerStyles = (host, iframe, fadeOpacity = 0.78) => {
+        const setPreviewLayerStyles = (host, iframe, fadeOpacity = 0.98) => {
           host.className = "shot3-preview-host";
           host.dataset.shot3Preview = "true";
           host.setAttribute("aria-hidden", "true");
@@ -5272,7 +5272,7 @@
             "border-radius:inherit",
             "opacity:0",
             "pointer-events:none",
-            "background:radial-gradient(circle at 50% 42%, rgba(255,213,125,0.24), transparent 34%), rgba(0,0,0,0.5)",
+            "background:radial-gradient(circle at 50% 42%, rgba(255,213,125,0.18), transparent 34%), rgba(0,0,0,0.96)",
             "transition:opacity 700ms ease"
           ].join(";");
 
@@ -5283,7 +5283,7 @@
             "height:104%",
             "border:0",
             "pointer-events:none",
-            "filter:saturate(1.14) contrast(1.06) brightness(0.82)",
+            "filter:saturate(1.08) contrast(1.08) brightness(0.9)",
             "transform:scale(1.08)"
           ].join(";");
           iframe.addEventListener("load", () => {
@@ -5307,7 +5307,7 @@
           iframe.allow = "autoplay; encrypted-media; picture-in-picture";
           iframe.referrerPolicy = "strict-origin-when-cross-origin";
           iframe.setAttribute("aria-hidden", "true");
-          setPreviewLayerStyles(host, iframe, constrainedDevice ? 0.66 : 0.78);
+          setPreviewLayerStyles(host, iframe, constrainedDevice ? 0.96 : 0.99);
           host.append(iframe);
           return host;
         };
@@ -5388,7 +5388,7 @@
             host.dataset.videoId = videoId;
             image.dataset.shot3PreviewMuted = "true";
             image.style.transition = "opacity 700ms ease";
-            image.style.opacity = constrainedDevice ? "0.54" : "0.46";
+            image.style.opacity = "0.08";
             card.append(host);
           });
 
@@ -6028,6 +6028,43 @@
             styleLink.rel = "stylesheet";
             styleLink.href = getBootObjectUrl(SHOT_THREE_REACT_STYLE);
             shotThreeReactShadow.append(styleLink);
+
+            const tuningStyle = document.createElement("style");
+            tuningStyle.textContent = `
+              .w-\\[320px\\].h-\\[180px\\] {
+                width: 282px !important;
+                height: 159px !important;
+              }
+
+              .video-hotspot,
+              .video-hotspot img {
+                opacity: 1 !important;
+              }
+
+              .video-hotspot {
+                background: #050200 !important;
+                box-shadow:
+                  inset 0 0 0 1px rgba(255, 218, 135, 0.18),
+                  0 0 24px rgba(255, 183, 76, 0.2) !important;
+              }
+
+              .video-hotspot + .shot3-preview-host,
+              .shot3-preview-host {
+                opacity: 0;
+              }
+
+              .shot3-preview-host.is-loaded {
+                opacity: 0.99 !important;
+              }
+
+              @media (max-width: 760px) {
+                .w-\\[320px\\].h-\\[180px\\] {
+                  width: min(68vw, 264px) !important;
+                  height: min(38.25vw, 149px) !important;
+                }
+              }
+            `;
+            shotThreeReactShadow.append(tuningStyle);
 
             shotThreeReactMount = document.createElement("div");
             shotThreeReactMount.className = "shot-three-react-mount";
