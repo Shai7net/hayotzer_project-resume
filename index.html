@@ -1967,6 +1967,57 @@
         filter: saturate(1.24) contrast(1.08) brightness(1.03);
       }
 
+      .shot3-preview-host {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        border-radius: inherit;
+        opacity: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 50% 42%, rgba(255, 213, 125, 0.24), transparent 34%),
+          rgba(0, 0, 0, 0.5);
+        transition: opacity 700ms ease;
+      }
+
+      .shot3-preview-host.is-loaded {
+        opacity: 0.78;
+      }
+
+      .shot3-preview-host iframe {
+        position: absolute;
+        inset: -2%;
+        width: 104%;
+        height: 104%;
+        border: 0;
+        pointer-events: none;
+        filter: saturate(1.14) contrast(1.06) brightness(0.82);
+        transform: scale(1.08);
+      }
+
+      .shot3-preview-host::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 32%, rgba(0, 0, 0, 0.36)),
+          repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 4px);
+        mix-blend-mode: screen;
+        opacity: 0.32;
+      }
+
+      .video-hotspot__thumb .shot3-preview-host {
+        inset: 0;
+      }
+
+      .video-hotspot__thumb.has-live-preview {
+        background:
+          var(--hotspot-image, none) center / cover no-repeat,
+          radial-gradient(circle at center, rgba(247, 200, 115, 0.22), rgba(0, 0, 0, 0.78));
+      }
+
       .links-pan-button {
         position: fixed;
         z-index: 8;
@@ -3516,6 +3567,10 @@
           transition-duration: 0.01ms;
         }
 
+        .shot3-preview-host {
+          display: none;
+        }
+
         .magic-burst-canvas {
           display: none;
         }
@@ -4164,6 +4219,9 @@
         let shotThreeReactShadow = null;
         let shotThreeReactMount = null;
         let shotThreeReactMounted = false;
+        let shotThreePreviewObserver = null;
+        let shotThreePreviewObserverTarget = null;
+        let shotThreePreviewTimer = 0;
         let shotTwoFallbackTimer = 0;
         let panDragActive = false;
         let panDragStartX = 0;
@@ -5166,6 +5224,226 @@
 
         const youtubeEmbedUrl = (url) => youtubeEmbedUrls(url)[0] || "";
 
+        const youtubePreviewUrl = (videoId, index = 0) => {
+          if (!videoId) {
+            return "";
+          }
+
+          const preview = new URL(`https://www.youtube-nocookie.com/embed/${videoId}`);
+          preview.searchParams.set("autoplay", "1");
+          preview.searchParams.set("mute", "1");
+          preview.searchParams.set("controls", "0");
+          preview.searchParams.set("playsinline", "1");
+          preview.searchParams.set("loop", "1");
+          preview.searchParams.set("playlist", videoId);
+          preview.searchParams.set("rel", "0");
+          preview.searchParams.set("modestbranding", "1");
+          preview.searchParams.set("iv_load_policy", "3");
+          preview.searchParams.set("disablekb", "1");
+          preview.searchParams.set("fs", "0");
+          preview.searchParams.set("start", String((index * 7) % 38));
+          if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+            preview.searchParams.set("origin", window.location.origin);
+          }
+          return preview.toString();
+        };
+
+        const youtubeIdFromThumbnail = (src) => {
+          const match = String(src || "").match(/\/vi\/([^/?#]+)\//);
+          return match ? match[1] : "";
+        };
+
+        const canRunShotThreeAutoplayPreviews = () => (
+          shotThreeStarted
+          && !prefersReducedMotion()
+          && videoModal
+          && !videoModal.classList.contains("is-open")
+        );
+
+        const setPreviewLayerStyles = (host, iframe, fadeOpacity = 0.78) => {
+          host.className = "shot3-preview-host";
+          host.dataset.shot3Preview = "true";
+          host.setAttribute("aria-hidden", "true");
+          host.style.cssText = [
+            "position:absolute",
+            "inset:0",
+            "z-index:1",
+            "overflow:hidden",
+            "border-radius:inherit",
+            "opacity:0",
+            "pointer-events:none",
+            "background:radial-gradient(circle at 50% 42%, rgba(255,213,125,0.24), transparent 34%), rgba(0,0,0,0.5)",
+            "transition:opacity 700ms ease"
+          ].join(";");
+
+          iframe.style.cssText = [
+            "position:absolute",
+            "inset:-2%",
+            "width:104%",
+            "height:104%",
+            "border:0",
+            "pointer-events:none",
+            "filter:saturate(1.14) contrast(1.06) brightness(0.82)",
+            "transform:scale(1.08)"
+          ].join(";");
+          iframe.addEventListener("load", () => {
+            host.classList.add("is-loaded");
+            host.style.opacity = String(fadeOpacity);
+          }, { once: true });
+        };
+
+        const createShotThreePreviewLayer = (videoId, title, index) => {
+          const src = youtubePreviewUrl(videoId, index);
+          if (!src) {
+            return null;
+          }
+
+          const host = document.createElement("span");
+          const iframe = document.createElement("iframe");
+          iframe.src = src;
+          iframe.title = title ? `Muted preview: ${title}` : "Muted video preview";
+          iframe.tabIndex = -1;
+          iframe.loading = "lazy";
+          iframe.allow = "autoplay; encrypted-media; picture-in-picture";
+          iframe.referrerPolicy = "strict-origin-when-cross-origin";
+          iframe.setAttribute("aria-hidden", "true");
+          setPreviewLayerStyles(host, iframe, constrainedDevice ? 0.66 : 0.78);
+          host.append(iframe);
+          return host;
+        };
+
+        const hasShotThreePreviewFor = (container, videoId) => (
+          Boolean(container)
+          && Array.from(container.querySelectorAll(".shot3-preview-host"))
+            .some((preview) => preview.dataset.videoId === videoId)
+        );
+
+        const getShotThreePreviewRoots = () => {
+          const roots = [document];
+          if (shotThreeReactShadow) {
+            roots.push(shotThreeReactShadow);
+          }
+          return roots;
+        };
+
+        const clearShotThreeAutoplayPreviews = () => {
+          window.clearTimeout(shotThreePreviewTimer);
+          shotThreePreviewTimer = 0;
+          getShotThreePreviewRoots().forEach((rootNode) => {
+            rootNode.querySelectorAll(".shot3-preview-host").forEach((preview) => preview.remove());
+            rootNode.querySelectorAll("[data-shot3-preview-card]").forEach((card) => {
+              card.removeAttribute("data-shot3-preview-card");
+              if (card.dataset?.shot3PreviewPositionApplied === "true") {
+                card.style.position = "";
+                delete card.dataset.shot3PreviewPositionApplied;
+              }
+            });
+            rootNode.querySelectorAll("img[data-shot3-preview-muted]").forEach((image) => {
+              image.style.opacity = "";
+              image.style.transition = "";
+              image.removeAttribute("data-shot3-preview-muted");
+            });
+            rootNode.querySelectorAll(".video-hotspot__thumb.has-live-preview").forEach((thumb) => {
+              thumb.classList.remove("has-live-preview");
+            });
+          });
+        };
+
+        const enhanceShotThreeReactPreviews = () => {
+          if (!shotThreeReactShadow) {
+            return 0;
+          }
+
+          const thumbnails = Array.from(
+            shotThreeReactShadow.querySelectorAll("img[src*='/vi/'][src*='hqdefault']")
+          );
+
+          thumbnails.slice(0, 6).forEach((image, index) => {
+            const videoId = youtubeIdFromThumbnail(image.currentSrc || image.src);
+            if (!videoId) {
+              return;
+            }
+
+            const trigger = image.closest("button, a, [role='button'], .cursor-pointer, [class*='cursor-pointer']")
+              || image.parentElement;
+            const card = trigger?.matches?.("button, a, [role='button']")
+              ? trigger.parentElement
+              : trigger;
+            if (!card || hasShotThreePreviewFor(card, videoId)) {
+              return;
+            }
+
+            const computed = window.getComputedStyle(card);
+            if (computed.position === "static") {
+              card.style.position = "relative";
+              card.dataset.shot3PreviewPositionApplied = "true";
+            }
+            card.dataset.shot3PreviewCard = "true";
+
+            const host = createShotThreePreviewLayer(videoId, image.alt || "Selected work", index);
+            if (!host) {
+              return;
+            }
+
+            host.dataset.videoId = videoId;
+            image.dataset.shot3PreviewMuted = "true";
+            image.style.transition = "opacity 700ms ease";
+            image.style.opacity = constrainedDevice ? "0.54" : "0.46";
+            card.append(host);
+          });
+
+          return thumbnails.length;
+        };
+
+        const enhanceShotThreeNativePreviews = () => {
+          return 0;
+        };
+
+        const enhanceShotThreeAutoplayPreviews = () => {
+          if (!canRunShotThreeAutoplayPreviews()) {
+            return;
+          }
+
+          const reactCount = enhanceShotThreeReactPreviews();
+          if (!reactCount) {
+            enhanceShotThreeNativePreviews();
+          }
+        };
+
+        const scheduleShotThreeAutoplayPreviews = (delay = 220) => {
+          window.clearTimeout(shotThreePreviewTimer);
+          if (!canRunShotThreeAutoplayPreviews()) {
+            return;
+          }
+
+          shotThreePreviewTimer = window.setTimeout(() => {
+            shotThreePreviewTimer = 0;
+            enhanceShotThreeAutoplayPreviews();
+          }, delay);
+        };
+
+        const ensureShotThreePreviewObserver = () => {
+          const target = shotThreeReactShadow || linksCarousel;
+          if (!target || shotThreePreviewObserverTarget === target) {
+            return;
+          }
+
+          if (shotThreePreviewObserver) {
+            shotThreePreviewObserver.disconnect();
+          }
+
+          shotThreePreviewObserver = new MutationObserver(() => {
+            scheduleShotThreeAutoplayPreviews(180);
+          });
+          shotThreePreviewObserverTarget = target;
+          shotThreePreviewObserver.observe(target, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["src"]
+          });
+        };
+
         const clearVideoModalTimers = () => {
           window.clearTimeout(videoModalLoadTimer);
           window.clearTimeout(videoModalActionTimer);
@@ -5200,6 +5478,7 @@
           window.dispatchEvent(new CustomEvent("hayotzer:video-open", {
             detail: { url, title }
           }));
+          clearShotThreeAutoplayPreviews();
           activeVideoEmbedUrls = youtubeEmbedUrls(url);
           activeVideoEmbedIndex = 0;
           activeVideoExternalUrl = url;
@@ -5293,6 +5572,7 @@
             }
           }
           lastModalFocus = null;
+          scheduleShotThreeAutoplayPreviews(260);
         };
 
         const getVideoModalFocusable = () => Array.from(
@@ -5565,6 +5845,8 @@
             hotspot.addEventListener("pointerdown", () => setActiveGalleryHotspot(hotspot));
           });
           shotThreeCardsRendered = true;
+          ensureShotThreePreviewObserver();
+          scheduleShotThreeAutoplayPreviews(120);
         };
 
         const swapShotThreeCards = () => {
@@ -5814,6 +6096,8 @@
             linksWorld.dataset.webgl = "ready";
           }
           refreshShotThreeRotationButton();
+          ensureShotThreePreviewObserver();
+          scheduleShotThreeAutoplayPreviews(420);
         };
 
         const destroyShotThreeReact = () => {
@@ -5869,6 +6153,8 @@
           triggerMagicBurst(1.2);
           showLinksGuide();
           refreshShotThreeRotationButton();
+          ensureShotThreePreviewObserver();
+          scheduleShotThreeAutoplayPreviews(620);
 
           window.setTimeout(() => {
             const maxPan = getLinksMaxPan();
@@ -5894,6 +6180,7 @@
             shotThreeNativeRaf = 0;
           }
 
+          clearShotThreeAutoplayPreviews();
           destroyShotThreeReact();
 
           setCss("--links-opacity", "0");
@@ -7389,6 +7676,13 @@
           if (detail.url) {
             openVideoModal(detail.url, detail.title || "Selected work");
           }
+        });
+        reducedMotionQuery.addEventListener?.("change", () => {
+          if (prefersReducedMotion()) {
+            clearShotThreeAutoplayPreviews();
+            return;
+          }
+          scheduleShotThreeAutoplayPreviews(180);
         });
 
         linksSkipToGameButton.addEventListener("click", linksAdvanceToGame);
