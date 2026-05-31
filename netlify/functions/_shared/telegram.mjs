@@ -19,6 +19,11 @@ export const telegramApi = async (method, payload) => {
   return data;
 };
 
+export const telegramList = (value = "") => String(value)
+  .split(",")
+  .map((id) => id.trim())
+  .filter(Boolean);
+
 export const mainKeyboard = () => ({
   inline_keyboard: [
     [

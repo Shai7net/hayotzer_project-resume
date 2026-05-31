@@ -35,7 +35,7 @@ if (-not $secret) {
 $body = @{
   url = "$siteUrl/api/telegram-bot"
   secret_token = $secret
-  allowed_updates = @("message", "callback_query")
+  allowed_updates = @("message", "callback_query", "channel_post")
 } | ConvertTo-Json -Depth 4
 
 $response = Invoke-RestMethod `

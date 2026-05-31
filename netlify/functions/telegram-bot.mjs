@@ -6,18 +6,18 @@ import {
   reportText,
   summarizeEvents
 } from "./_shared/analytics-store.mjs";
-import { answerCallback, mainKeyboard, sendMessage } from "./_shared/telegram.mjs";
+import { answerCallback, mainKeyboard, sendMessage, telegramList } from "./_shared/telegram.mjs";
 
-const allowedUserIds = () => env("TELEGRAM_ALLOWED_USER_IDS")
-  .split(",")
-  .map((id) => id.trim())
-  .filter(Boolean);
+const allowedUserIds = () => telegramList(env("TELEGRAM_ALLOWED_USER_IDS"));
+const allowedChatIds = () => telegramList(env("TELEGRAM_ALLOWED_CHAT_IDS"));
 
 const isAuthorized = (from, chat) => {
-  const allowed = allowedUserIds();
+  const allowedUsers = allowedUserIds();
+  const allowedChats = allowedChatIds();
   const adminChat = env("TELEGRAM_ADMIN_CHAT_ID");
-  if (!allowed.length && !adminChat) return false;
-  if (from?.id && allowed.includes(String(from.id))) return true;
+  if (!allowedUsers.length && !allowedChats.length && !adminChat) return false;
+  if (from?.id && allowedUsers.includes(String(from.id))) return true;
+  if (chat?.id && allowedChats.includes(String(chat.id))) return true;
   if (chat?.id && adminChat && String(chat.id) === String(adminChat)) return true;
   return false;
 };
@@ -124,6 +124,8 @@ export default async (req) => {
     await handleCallback(update.callback_query);
   } else if (update.message) {
     await handleText(update.message);
+  } else if (update.channel_post) {
+    await handleText(update.channel_post);
   }
 
   return json({ ok: true });
